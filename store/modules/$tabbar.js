@@ -17,12 +17,6 @@ export default {
         pagePath: '/pages/index/index',
       },
       {
-        iconPath: 'ri:grid-line',
-        selectedIconPath: 'ri:grid-fill',
-        text: '分类',
-        pagePath: '/pages/category/index',
-      },
-      {
         iconPath: 'ri:user-smile-line',
         selectedIconPath: 'ri:user-smile-fill',
         text: '我的',
