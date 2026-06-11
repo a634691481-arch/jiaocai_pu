@@ -31,6 +31,9 @@
 </template>
 
 <script setup>
+  import textbookData from '@/static/textbook-data.json'
+  import myfn from '@/common/function/myPubFunction.js'
+
   const th = uni.$u.color
 
   const pagingConfig = ref({
@@ -56,10 +59,7 @@
   }
 
   async function queryList(page, limit) {
-    const res = await vk.callFunction({
-      url: 'client/pub.index.getMyDownloads',
-      data: { pageIndex: page, pageSize: limit },
-    })
+    const res = myfn.getDownloadHistory(page, limit)
     if (res.code === 1) {
       paging.value?.complete(res.data || [])
       loaded.value = true
@@ -69,7 +69,7 @@
   }
 
   function goDetail(item) {
-    vk.navigateTo(`/pages/index/detail?id=${item.textbookId || item._id}`)
+    vk.navigateTo(`/pages/index/detail?idx=${item.idx}`)
   }
 
   function formatTime(ts) {

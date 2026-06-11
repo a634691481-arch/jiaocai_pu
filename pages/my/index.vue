@@ -190,7 +190,7 @@
   }
 
   async function loadDownloaded() {
-    const res = await vk.callFunction({ url: 'client/pub.index.getMyDownloads', data: { pageIndex: 1, pageSize: 5 } })
+    const res = myfn.getDownloadHistory(1, 5)
     if (res.code === 1) downloadedList.value = res.data || []
   }
 

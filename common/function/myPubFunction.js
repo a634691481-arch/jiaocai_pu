@@ -72,16 +72,32 @@ myfn.logout = async () => {
   vk.reLaunch('/pages/index/index')
 }
 
-// 跳转登录页面
-myfn.navigateToLogin = url => {
-  vk.navigate.setOriginalPage({
-    url,
-  })
-  // vk.navigateTo('/pages/login/index')
+// 下载历史：保存
+myfn.saveDownloadHistory = (item) => {
+  const key = 'download_history'
+  let list = vk.getStorageSync(key) || []
+  const idx = list.findIndex(r => r.title === item.title && r.publisher === item.publisher && r.grade === item.grade)
+  const record = { ...item, downloadTime: Date.now() }
+  if (idx > -1) {
+    list[idx] = record
+  } else {
+    list.unshift(record)
+  }
+  if (list.length > 100) list = list.slice(0, 100)
+  vk.setStorageSync(key, list)
+}
 
-  // vk.navigateToLogin({
-  //   mode: 'navigateTo',
-  // })
+// 下载历史：读取（分页）
+myfn.getDownloadHistory = (pageIndex = 1, pageSize = 20) => {
+  const key = 'download_history'
+  const list = vk.getStorageSync(key) || []
+  const start = (pageIndex - 1) * pageSize
+  return { code: 1, data: list.slice(start, start + pageSize), total: list.length }
+}
+
+// 跳转登录页面
+myfn.navigateToLogin = (url) => {
+  vk.navigate.setOriginalPage({ url })
 }
 
 export default myfn

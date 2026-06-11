@@ -180,6 +180,7 @@
 
 <script setup>
   import textbookData from '@/static/textbook-data.json'
+  import myfn from '@/common/function/myPubFunction.js'
 
   const pagingConfig = ref({
     auto: true,
@@ -277,9 +278,13 @@
   async function recordDownload() {
     const key = getStatsKey()
     if (!key) return
+    detail.value.downloadCount++
+    const idx = textbookData.findIndex(
+      r => r.title === detail.value.title && r.publisher === detail.value.publisher && r.grade === detail.value.grade,
+    )
+    myfn.saveDownloadHistory({ idx, title: detail.value.title, publisher: detail.value.publisher, grade: detail.value.grade, subject: detail.value.subject, section: detail.value.section, fileSize: detail.value.fileSize })
     try {
       await vk.callFunction({ url: 'client/pub.index.recordStat', data: { key, type: 'download', info: detail.value } })
-      detail.value.downloadCount++
     } catch (e) { /* 不阻塞 */ }
   }
 
