@@ -1,0 +1,14 @@
+[
+  {
+    "IndexName": "grade_subject",
+    "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "grade", "Direction": "1" }, { "Name": "subject", "Direction": "1" }], "MgoIsUnique": false }
+  },
+  {
+    "IndexName": "status_addTime",
+    "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "status", "Direction": "1" }, { "Name": "addTime", "Direction": "-1", "Type": "long" }], "MgoIsUnique": false }
+  },
+  {
+    "IndexName": "isHot",
+    "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "isHot", "Direction": "1" }, { "Name": "downloads", "Direction": "-1", "Type": "long" }], "MgoIsUnique": false }
+  }
+]

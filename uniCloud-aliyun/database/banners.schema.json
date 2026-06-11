@@ -1,0 +1,32 @@
+{
+  "bsonType": "object",
+  "required": ["imageUrl", "sort"],
+  "properties": {
+    "_id": {
+      "title": "ID",
+      "bsonType": "string"
+    },
+    "imageUrl": {
+      "title": "Banner图片",
+      "bsonType": "string"
+    },
+    "linkType": {
+      "title": "跳转类型",
+      "bsonType": "string",
+      "description": "textbook=教材详情 / url=外部链接",
+      "defaultValue": "textbook",
+      "enum": ["textbook", "url"]
+    },
+    "linkValue": {
+      "title": "跳转值",
+      "bsonType": "string",
+      "description": "教材ID 或 URL"
+    },
+    "sort": {
+      "title": "排序权重",
+      "bsonType": "int",
+      "defaultValue": 0
+    }
+  },
+  "version": "0.0.1"
+}

@@ -1,0 +1,6 @@
+[
+  {
+    "IndexName": "sort",
+    "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "sort", "Direction": "-1", "Type": "long" }], "MgoIsUnique": false }
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "bsonType": "object",
+  "required": ["uid", "textbookId"],
+  "properties": {
+    "_id": {
+      "title": "ID",
+      "bsonType": "string"
+    },
+    "uid": {
+      "title": "用户ID",
+      "bsonType": "string"
+    },
+    "textbookId": {
+      "title": "教材ID",
+      "bsonType": "string"
+    },
+    "title": {
+      "title": "教材名称",
+      "bsonType": "string",
+      "description": "冗余字段，方便列表展示"
+    },
+    "downloadTime": {
+      "title": "下载时间",
+      "bsonType": "timestamp",
+      "forceDefaultValue": { "$env": "now" }
+    }
+  },
+  "version": "0.0.1"
+}

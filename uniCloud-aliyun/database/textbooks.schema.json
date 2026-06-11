@@ -1,0 +1,79 @@
+{
+  "bsonType": "object",
+  "required": ["title", "grade", "subject", "status"],
+  "properties": {
+    "_id": {
+      "title": "ID",
+      "bsonType": "string"
+    },
+    "title": {
+      "title": "教材名称",
+      "bsonType": "string",
+      "description": "如 语文 三年级上册"
+    },
+    "grade": {
+      "title": "年级",
+      "bsonType": "string",
+      "description": "grade1~grade9",
+      "enum": ["grade1", "grade2", "grade3", "grade4", "grade5", "grade6", "grade7", "grade8", "grade9"]
+    },
+    "subject": {
+      "title": "科目",
+      "bsonType": "string",
+      "description": "科目编码",
+      "enum": ["chinese", "math", "english", "physics", "chemistry", "biology", "politics", "history", "geography"]
+    },
+    "publisher": {
+      "title": "出版社",
+      "bsonType": "string",
+      "description": "如 人教版",
+      "defaultValue": "人教版"
+    },
+    "cover": {
+      "title": "封面图片URL",
+      "bsonType": "string",
+      "description": "云存储CDN地址"
+    },
+    "fileUrl": {
+      "title": "PDF下载地址",
+      "bsonType": "string",
+      "description": "云存储CDN地址",
+      "permission": {
+        "read": false
+      }
+    },
+    "fileSize": {
+      "title": "文件大小",
+      "bsonType": "int",
+      "description": "字节"
+    },
+    "downloads": {
+      "title": "下载次数",
+      "bsonType": "int",
+      "defaultValue": 0
+    },
+    "views": {
+      "title": "浏览次数",
+      "bsonType": "int",
+      "defaultValue": 0
+    },
+    "isHot": {
+      "title": "热门推荐",
+      "bsonType": "bool",
+      "defaultValue": false
+    },
+    "status": {
+      "title": "状态",
+      "bsonType": "int",
+      "description": "0=下架 1=上架",
+      "defaultValue": 1,
+      "enum": [0, 1]
+    },
+    "addTime": {
+      "title": "添加时间",
+      "bsonType": "timestamp",
+      "forceDefaultValue": { "$env": "now" }
+    }
+  },
+  "version": "0.0.1"
+}

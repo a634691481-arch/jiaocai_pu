@@ -1,0 +1,6 @@
+[
+  {
+    "IndexName": "uid_downloadTime",
+    "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "uid", "Direction": "1" }, { "Name": "downloadTime", "Direction": "-1", "Type": "long" }], "MgoIsUnique": false }
+  }
+]
