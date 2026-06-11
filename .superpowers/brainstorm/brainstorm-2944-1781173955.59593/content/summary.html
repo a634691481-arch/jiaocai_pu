@@ -1,0 +1,48 @@
+<h2>✅ 设计文档完成</h2>
+<p class="subtitle">docs/设计文档-教材铺.md</p>
+
+<div class="section">
+  <h3>📋 决策汇总</h3>
+  <table style="width:100%;font-size:12px;border-collapse:collapse;margin-top:8px">
+    <tr style="background:#f8fafc"><th style="text-align:left;padding:6px">决策项</th><th style="text-align:left;padding:6px">结论</th></tr>
+    <tr><td style="padding:4px 6px">资源来源</td><td style="padding:4px 6px">手动上传 UniCloud 云存储</td></tr>
+    <tr><td style="padding:4px 6px">教材格式</td><td style="padding:4px 6px">PDF + 封面图片</td></tr>
+    <tr><td style="padding:4px 6px">下载权限</td><td style="padding:4px 6px">游客浏览，下载需登录</td></tr>
+    <tr><td style="padding:4px 6px">广告模式</td><td style="padding:4px 6px">激励视频 + Banner</td></tr>
+    <tr><td style="padding:4px 6px">分类导航</td><td style="padding:4px 6px">按年级 → 科目筛选</td></tr>
+    <tr><td style="padding:4px 6px">页面架构</td><td style="padding:4px 6px">3 Tab: 首页/分类/我的</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <h3>📐 架构一览</h3>
+  <div style="display:flex;gap:12px;font-size:12px">
+    <div style="flex:1;background:#e8f0fe;border-radius:8px;padding:12px">
+      <strong>6 个页面</strong><br>
+      首页 / 分类 / 我的<br>
+      教材列表 / 详情 / 搜索
+    </div>
+    <div style="flex:1;background:#eaf7ea;border-radius:8px;padding:12px">
+      <strong>3 个数据库集合</strong><br>
+      textbooks<br>download_logs<br>banners
+    </div>
+    <div style="flex:1;background:#fef3c7;border-radius:8px;padding:12px">
+      <strong>8 个云函数接口</strong><br>
+      6 公开 + 2 需登录<br>
+      复用现有 VK 架构
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>📦 实施 5 个 Task</h3>
+  <ol style="font-size:12px;padding-left:20px">
+    <li>清理旧代码（云函数/数据库/路由）</li>
+    <li>创建数据库 Schema</li>
+    <li>编写云函数接口</li>
+    <li>开发前端页面</li>
+    <li>更新项目配置</li>
+  </ol>
+</div>
+
+<p style="margin-top:16px;color:#666;font-size:13px">预览: <a href="http://localhost:64908" target="_blank">http://localhost:64908</a> — 确认后开始实施</p>

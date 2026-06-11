@@ -1,0 +1,55 @@
+<h2>云函数 API 设计</h2>
+<p class="subtitle">路径格式: client/pub_index.xxx — 共 8 个接口</p>
+
+<div class="section">
+  <h3>📗 教材相关 (5个)</h3>
+  <div class="mockup" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+    <div class="mockup-body" style="padding:16px">
+      <table style="width:100%;font-size:12px;border-collapse:collapse">
+        <tr style="background:#f8fafc"><th style="text-align:left;padding:6px">接口</th><th style="text-align:left;padding:6px">说明</th><th style="text-align:left;padding:6px">入参</th></tr>
+        <tr><td style="padding:4px 6px;color:#2563eb;font-weight:bold">getTextbookList</td><td style="padding:4px 6px">分页查询教材列表</td><td style="padding:4px 6px">grade, subject, keyword, pageIndex, pageSize</td></tr>
+        <tr><td style="padding:4px 6px;color:#2563eb;font-weight:bold">getTextbookDetail</td><td style="padding:4px 6px">获取教材详情</td><td style="padding:4px 6px">id</td></tr>
+        <tr><td style="padding:4px 6px;color:#2563eb;font-weight:bold">getHotTextbooks</td><td style="padding:4px 6px">热门推荐列表(首页)</td><td style="padding:4px 6px">limit (默认10)</td></tr>
+        <tr><td style="padding:4px 6px;color:#2563eb;font-weight:bold">searchTextbooks</td><td style="padding:4px 6px">全局搜索</td><td style="padding:4px 6px">keyword, pageIndex, pageSize</td></tr>
+        <tr style="background:#fef3c7"><td style="padding:4px 6px;color:#d97706;font-weight:bold">getDownloadUrl</td><td style="padding:4px 6px">获取下载链接(需登录)</td><td style="padding:4px 6px">id → 返回 fileUrl + 计入下载记录</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>📒 其他 (3个)</h3>
+  <div class="mockup" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+    <div class="mockup-body" style="padding:16px">
+      <table style="width:100%;font-size:12px;border-collapse:collapse">
+        <tr style="background:#f8fafc"><th style="text-align:left;padding:6px">接口</th><th style="text-align:left;padding:6px">说明</th><th style="text-align:left;padding:6px">入参</th></tr>
+        <tr><td style="padding:4px 6px;color:#16a34a;font-weight:bold">getBanners</td><td style="padding:4px 6px">首页Banner列表</td><td style="padding:4px 6px">无</td></tr>
+        <tr><td style="padding:4px 6px;color:#16a34a;font-weight:bold">getMyDownloads</td><td style="padding:4px 6px">我的下载历史(需登录)</td><td style="padding:4px 6px">pageIndex, pageSize</td></tr>
+        <tr><td style="padding:4px 6px;color:#16a34a;font-weight:bold">incrementViewCount</td><td style="padding:4px 6px">增加浏览/下载计数</td><td style="padding:4px 6px">id, type(download/view)</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🔑 权限说明</h3>
+  <div style="font-size:12px;line-height:2">
+    <div style="color:#16a34a">🟢 无需登录：getTextbookList, getTextbookDetail, getHotTextbooks, searchTextbooks, getBanners, incrementViewCount</div>
+    <div style="color:#d97706">🟡 需要登录：getDownloadUrl, getMyDownloads</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>📥 下载流程</h3>
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;flex-wrap:wrap">
+    <span class="label">详情页</span> → 
+    <span class="label">点击下载</span> → 
+    <span style="background:#fef3c7;padding:2px 6px;border-radius:4px">检查登录 → 未登录跳转</span> → 
+    <span style="background:#e8f0fe;padding:2px 6px;border-radius:4px">播放激励视频广告</span> → 
+    <span class="label">getDownloadUrl</span> → 
+    <span style="background:#eaf7ea;padding:2px 6px;border-radius:4px">返回PDF链接 + 记录下载</span> → 
+    <span class="label">调用wx.downloadFile + wx.openDocument</span>
+  </div>
+</div>
+
+<p style="margin-top:16px;color:#666;font-size:13px">预览: <a href="http://localhost:64908" target="_blank">http://localhost:64908</a> — 确认后编写完整设计文档</p>

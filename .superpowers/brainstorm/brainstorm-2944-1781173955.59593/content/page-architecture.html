@@ -1,0 +1,34 @@
+<h2>页面架构方案</h2>
+<p class="subtitle">你选择了按年级分类，以下是两种页面布局方案</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>扁平导航</h3>
+      <p style="margin-bottom:8px"><strong>首页 → 教材列表 → 详情页</strong></p>
+      <div class="mock-nav" style="font-size:12px">首页(年级宫格) &gt; 教材列表(年级+科目筛选) &gt; 详情+下载</div>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>优势</h4><ul><li>路径短，3步到达下载</li><li>结构清晰易维护</li></ul></div>
+        <div class="cons"><h4>劣势</h4><ul><li>功能单一，后续扩展难</li></ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>底部Tab架构（推荐）</h3>
+      <p style="margin-bottom:8px"><strong>首页 + 分类 + 我的</strong></p>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <div class="mock-nav" style="font-size:11px;flex:1;text-align:center">Tab1:首页<br>推荐/搜索</div>
+        <div class="mock-nav" style="font-size:11px;flex:1;text-align:center">Tab2:分类<br>年级→科目</div>
+        <div class="mock-nav" style="font-size:11px;flex:1;text-align:center">Tab3:我的<br>登录/下载记录</div>
+      </div>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>优势</h4><ul><li>扩展性强（后续可加Tab）</li><li>分类独立，浏览体验好</li><li>"我的"页便于登录管理</li></ul></div>
+        <div class="cons"><h4>劣势</h4><ul><li>多一层Tab结构</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+<p style="margin-top:16px;color:#666;font-size:13px">打开浏览器预览 → <a href="http://localhost:64908" target="_blank">http://localhost:64908</a> → 点击选择你倾向的方案</p>

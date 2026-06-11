@@ -1,0 +1,56 @@
+<h2>页面树 & 核心流程</h2>
+<p class="subtitle">3个Tab页 + 3个子页面</p>
+
+<div class="mockup" style="margin-bottom:24px">
+  <div class="mockup-header">页面结构 & 用户流程</div>
+  <div class="mockup-body" style="padding:20px;font-family:sans-serif">
+    <div style="display:flex;align-items:stretch;gap:12px">
+      <!-- Tab Bar -->
+      <div style="background:#f0f0f0;border-radius:12px;padding:12px;min-width:100px;text-align:center;font-size:13px;font-weight:bold">
+        TabBar
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+          <div style="background:#2563eb;color:#fff;padding:6px;border-radius:6px;font-size:11px">首页</div>
+          <div style="background:#16a34a;color:#fff;padding:6px;border-radius:6px;font-size:11px">分类</div>
+          <div style="background:#d97706;color:#fff;padding:6px;border-radius:6px;font-size:11px">我的</div>
+        </div>
+      </div>
+      <!-- Pages -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+        <div style="background:#e8f0fe;border-radius:8px;padding:12px;border-left:4px solid #2563eb">
+          <div style="font-weight:bold;font-size:13px">📄 首页 (index)</div>
+          <div style="font-size:11px;color:#666;margin-top:4px">搜索框 + 公告Banner + 热门推荐列表<br>底部 Banner 广告</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;background:#eaf7ea;border-radius:8px;padding:12px;border-left:4px solid #16a34a">
+            <div style="font-weight:bold;font-size:13px">📄 分类 (category)</div>
+            <div style="font-size:11px;color:#666;margin-top:4px">年级选择 → 科目列表<br>底部 Banner 广告</div>
+          </div>
+          <div style="flex:1;background:#fef3c7;border-radius:8px;padding:12px;border-left:4px solid #d97706">
+            <div style="font-weight:bold;font-size:13px">📄 我的 (my)</div>
+            <div style="font-size:11px;color:#666;margin-top:4px">用户信息/登录入口<br>下载历史列表</div>
+        </div>
+      </div>
+      </div>
+      <!-- 子页面 -->
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <div class="placeholder" style="flex:1;text-align:center;font-size:12px">📄 教材列表 (list)<br>按年级+科目筛选<br>封面网格展示</div>
+        <div class="placeholder" style="flex:1;text-align:center;font-size:12px">📄 教材详情 (detail)<br>封面大图 + 信息<br>[观看广告后下载]</div>
+        <div class="placeholder" style="flex:1;text-align:center;font-size:12px">📄 搜索结果 (search)<br>全局搜索教材<br>列表分页</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>用户核心流程</h3>
+<div class="section">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:13px">
+    <span style="background:#e8f0fe;padding:2px 8px;border-radius:4px">浏览</span> 首页推荐/分类入口 → 教材列表 → 详情查看封面
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:13px">
+    <span style="background:#fef3c7;padding:2px 8px;border-radius:4px">下载</span> 详情页 → 点击下载 → 未登录则跳转登录 → 观看激励视频 → 获取下载链接
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+    <span style="background:#eaf7ea;padding:2px 8px;border-radius:4px">记录</span> 我的 → 下载历史 → 查看/继续下载
+  </div>
+</div>
+<p style="margin-top:16px;color:#666;font-size:13px">预览: <a href="http://localhost:64908" target="_blank">http://localhost:64908</a> — 确认后继续讨论数据设计</p>

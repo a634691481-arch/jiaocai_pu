@@ -1,0 +1,63 @@
+<h2>数据库设计</h2>
+<p class="subtitle">UniCloud 阿里云 MongoDB — 3个核心集合</p>
+
+<div class="section">
+  <h3>📗 textbooks — 教材集合</h3>
+  <div class="mockup" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+    <div class="mockup-body" style="padding:16px">
+      <table style="width:100%;font-size:12px;border-collapse:collapse">
+        <tr style="background:#f8fafc"><th style="text-align:left;padding:6px">字段</th><th style="text-align:left;padding:6px">类型</th><th style="text-align:left;padding:6px">说明</th></tr>
+        <tr><td style="padding:4px 6px">_id</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">自动生成</td></tr>
+        <tr><td style="padding:4px 6px">title</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">教材名称，如"语文 三年级上册"</td></tr>
+        <tr><td style="padding:4px 6px">grade</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">年级，如 grade3</td></tr>
+        <tr><td style="padding:4px 6px">subject</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">科目，如 chinese/math/english</td></tr>
+        <tr><td style="padding:4px 6px">publisher</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">出版社，如"人教版"</td></tr>
+        <tr><td style="padding:4px 6px">cover</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">封面图片URL（云存储）</td></tr>
+        <tr style="background:#fef3c7"><td style="padding:4px 6px">fileUrl</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">PDF下载地址（云存储CDN）</td></tr>
+        <tr><td style="padding:4px 6px">fileSize</td><td style="padding:4px 6px">Number</td><td style="padding:4px 6px">文件大小（字节）</td></tr>
+        <tr><td style="padding:4px 6px">downloads</td><td style="padding:4px 6px">Number</td><td style="padding:4px 6px">下载次数</td></tr>
+        <tr><td style="padding:4px 6px">isHot</td><td style="padding:4px 6px">Boolean</td><td style="padding:4px 6px">是否热门推荐</td></tr>
+        <tr><td style="padding:4px 6px">status</td><td style="padding:4px 6px">Number</td><td style="padding:4px 6px">0=下架 1=上架</td></tr>
+        <tr><td style="padding:4px 6px">addTime</td><td style="padding:4px 6px">Date</td><td style="padding:4px 6px">添加时间</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>📘 download_logs — 下载记录</h3>
+  <div class="mockup" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+    <div class="mockup-body" style="padding:16px">
+      <table style="width:100%;font-size:12px;border-collapse:collapse">
+        <tr style="background:#f8fafc"><th style="text-align:left;padding:6px">字段</th><th style="text-align:left;padding:6px">类型</th><th style="text-align:left;padding:6px">说明</th></tr>
+        <tr><td style="padding:4px 6px">uid</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">用户ID</td></tr>
+        <tr><td style="padding:4px 6px">textbookId</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">教材ID</td></tr>
+        <tr><td style="padding:4px 6px">title</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">教材名称（冗余，方便展示）</td></tr>
+        <tr><td style="padding:4px 6px">downloadTime</td><td style="padding:4px 6px">Date</td><td style="padding:4px 6px">下载时间</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>📒 banners — 首页公告/Banner</h3>
+  <div class="mockup" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+    <div class="mockup-body" style="padding:16px">
+      <table style="width:100%;font-size:12px;border-collapse:collapse">
+        <tr style="background:#f8fafc"><th style="text-align:left;padding:6px">字段</th><th style="text-align:left;padding:6px">类型</th><th style="text-align:left;padding:6px">说明</th></tr>
+        <tr><td style="padding:4px 6px">imageUrl</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">Banner图片</td></tr>
+        <tr><td style="padding:4px 6px">linkType</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">textbook / url</td></tr>
+        <tr><td style="padding:4px 6px">linkValue</td><td style="padding:4px 6px">String</td><td style="padding:4px 6px">教材ID 或 外部链接</td></tr>
+        <tr><td style="padding:4px 6px">sort</td><td style="padding:4px 6px">Number</td><td style="padding:4px 6px">排序权重</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<h3>年级/科目 数据字典（前端硬编码）</h3>
+<div class="section" style="font-size:12px;line-height:1.6">
+  <strong>年级</strong>: grade1~grade9（一年级~九年级），按小学/初中分组<br>
+  <strong>科目</strong>: chinese / math / english / physics / chemistry / biology / politics / history / geography
+</div>
+
+<p style="margin-top:16px;color:#666;font-size:13px">预览: <a href="http://localhost:64908" target="_blank">http://localhost:64908</a> — 确认数据设计后，继续API设计</p>
