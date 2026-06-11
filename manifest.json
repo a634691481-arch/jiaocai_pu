@@ -1,7 +1,8 @@
 {
-    "name" : "教材宝",
+	"_lastAction": "2",
+    "name" : "教材铺",
     "appid" : "__UNI__CA8E78B",
-    "description" : "教材宝 - 便捷的教材管理工具",
+    "description" : "教材铺 - 便捷的教材管理工具",
     "versionName" : "0.0.22",
     "versionCode" : 33,
     "transformPx" : false,
@@ -193,7 +194,7 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wxcffe1f07c0a88871",
+        "appid" : "wx20c6ed18247fac1d",
         "setting" : {
             "urlCheck" : true,
             "es6" : true,
