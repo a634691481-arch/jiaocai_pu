@@ -8,49 +8,52 @@
     :color="th.primary"
   >
     <view class="flex-col gap-3 p-3">
-      <!-- 顶部筛选栏 -->
-      <view
-        class="rounded-2xl flex items-center gap-3 p-4"
-        style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04)"
-      >
+      <!-- 固定顶部 -->
+      <view style="position: sticky; top: 0; z-index: 10; background: #f5f3f7">
+        <!-- 顶部筛选栏 -->
         <view
-          class="rounded-xl shrink-0 flex items-center justify-center w-10 h-10"
-          :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }"
+          class="rounded-2xl flex items-center gap-3 p-4"
+          style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04)"
         >
-          <yy-icon name="ri:book-2-line" size="20" color="#ffffff" />
-        </view>
-        <view class="flex-1 min-w-0">
-          <text class="line-clamp-1 text-sm font-bold" style="color: #4a4a4a">{{ subject }}</text>
-          <text class="text-xs mt-0.5" style="color: #878787">
-            {{ publisher || '全部版本' }} · {{ state.dataList.length }}册
-          </text>
-        </view>
-        <view
-          class="px-3 py-1.5 rounded-full text-xs font-medium"
-          :style="{ background: `rgba(139, 95, 191, 0.08)`, color: '#8B5FBF' }"
-        >
-          {{ currentGradeFilter || '全部年级' }}
-        </view>
-      </view>
-
-      <!-- 年级快速筛选 -->
-      <scroll-view scroll-x class="whitespace-nowrap" :show-scrollbar="false">
-        <view class="inline-flex gap-2 px-1 py-1">
           <view
-            v-for="g in gradeFilters"
-            :key="g"
-            class="inline-block px-4 py-2 text-xs font-semibold transition-all duration-200 rounded-full"
-            :style="
-              currentGradeFilter === g
-                ? { background: '#8B5FBF', color: '#ffffff', boxShadow: '0 4rpx 12rpx rgba(139, 95, 191, 0.25)' }
-                : { background: '#f3f4f6', color: '#878787' }
-            "
-            @click="filterByGrade(g)"
+            class="rounded-xl shrink-0 flex items-center justify-center w-10 h-10"
+            :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }"
           >
-            {{ g }}
+            <yy-icon name="ri:book-2-line" size="20" color="#ffffff" />
+          </view>
+          <view class="flex-1 min-w-0">
+            <text class="line-clamp-1 text-sm font-bold" style="color: #4a4a4a">{{ subject }}</text>
+            <text class="text-xs mt-0.5" style="color: #878787">
+              {{ publisher || '全部版本' }} · {{ state.dataList.length }}册
+            </text>
+          </view>
+          <view
+            class="px-3 py-1.5 rounded-full text-xs font-medium"
+            :style="{ background: `rgba(139, 95, 191, 0.08)`, color: '#8B5FBF' }"
+          >
+            {{ currentGradeFilter || '全部年级' }}
           </view>
         </view>
-      </scroll-view>
+
+        <!-- 年级快速筛选 -->
+        <scroll-view scroll-x class="whitespace-nowrap" :show-scrollbar="false" style="padding-bottom: 12rpx">
+          <view class="inline-flex gap-2 px-1 py-1">
+            <view
+              v-for="g in gradeFilters"
+              :key="g"
+              class="inline-block px-4 py-2 text-xs font-semibold transition-all duration-200 rounded-full"
+              :style="
+                currentGradeFilter === g
+                  ? { background: '#8B5FBF', color: '#ffffff', boxShadow: '0 4rpx 12rpx rgba(139, 95, 191, 0.25)' }
+                  : { background: '#f3f4f6', color: '#878787' }
+              "
+              @click="filterByGrade(g)"
+            >
+              {{ g }}
+            </view>
+          </view>
+        </scroll-view>
+      </view>
 
       <!-- 教材文件列表 -->
       <view class="flex-col gap-1.5 pb-4">
