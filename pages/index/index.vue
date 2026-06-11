@@ -1,60 +1,20 @@
 <template>
   <yy-paging v-model="state.dataList" @query="queryList" ref="paging" @scroll="scroll" v-bind="pagingConfig">
-    <view class="flex flex-col p-0" style="background-color: #f5f3f7">
-      <!-- Banner -->
-      <!-- <view v-if="banners.length" class="relative overflow-hidden" style="height: 300rpx">
-        <swiper
-          class="w-full h-full"
-          :autoplay="true"
-          :interval="3500"
-          :circular="true"
-          indicator-dots
-          indicator-color="rgba(255,255,255,0.3)"
-          :indicator-active-color="'#8B5FBF'"
-        >
-          <swiper-item v-for="b in banners" :key="b._id" @click="onBannerTap(b)">
-            <image :src="b.imageUrl" mode="aspectFill" class="w-full h-full" />
-            <view
-              class="absolute inset-0"
-              style="background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.4) 100%)"
-            />
-          </swiper-item>
-        </swiper>
-      </view> -->
+    <template #top>
+      <!-- 学段切换条 -->
+      <scroll-view ref="tabScrollRef" scroll-x class="whitespace-nowrap tab-scroll-view" :show-scrollbar="false"
+        :scroll-left="tabScrollLeft" scroll-with-animation style="background: #f5f3f7; padding: 12rpx 16rpx">
+        <view class="inline-flex gap-2">
+          <view v-for="sec in sectionList" :key="sec" :id="'section-' + sec"
+            class="inline-block px-5 py-2 text-sm font-semibold transition-all duration-300 rounded-full"
+            :style="currentSection === sec ? { background: `linear-gradient(135deg, #8B5FBF, #61398F)`, color: '#FFFFFF', boxShadow: '0 4rpx 16rpx rgba(139,95,191,0.3)' } : { background: '#FFFFFF', color: '#878787', boxShadow: '0 1rpx 4rpx rgba(0,0,0,0.04)' }"
+            @click="onSectionClick(sec)">{{ sec }}</view>
+        </view>
+      </scroll-view>
+    </template>
 
-      <!-- 内容区 -->
-      <view class="flex flex-col gap-4 px-4 pt-4 pb-6">
-        <!-- 年级切换条（固定顶部） -->
-        <scroll-view
-          ref="tabScrollRef"
-          scroll-x
-          class="whitespace-nowrap tab-scroll-view"
-          :show-scrollbar="false"
-          :scroll-left="tabScrollLeft"
-          scroll-with-animation
-          style="position: sticky; top: 0; z-index: 10; background: #f5f3f7; padding: 12rpx 0"
-        >
-          <view class="inline-flex gap-2">
-            <view
-              v-for="sec in sectionList"
-              :key="sec"
-              :id="'section-' + sec"
-              class="inline-block px-5 py-2 text-sm font-semibold transition-all duration-300 rounded-full"
-              :style="
-                currentSection === sec
-                  ? {
-                      background: `linear-gradient(135deg, #8B5FBF, #61398F)`,
-                      color: '#FFFFFF',
-                      boxShadow: '0 4rpx 16rpx rgba(139,95,191,0.3)',
-                    }
-                  : { background: '#FFFFFF', color: '#878787', boxShadow: '0 1rpx 4rpx rgba(0,0,0,0.04)' }
-              "
-              @click="onSectionClick(sec)"
-            >
-              {{ sec }}
-            </view>
-          </view>
-        </scroll-view>
+    <!-- 内容区 -->
+    <view class="flex flex-col gap-4 p-4" style="background-color: #f5f3f7">
 
         <!-- 科目列表 -->
         <view v-if="currentSubjects.length" class="flex flex-col gap-2">
