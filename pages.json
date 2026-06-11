@@ -86,6 +86,27 @@
 				"disableScroll": true,
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/index/detail",
+			"style": {
+				"disableScroll": true,
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/index/list",
+			"style": {
+				"disableScroll": true,
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/index/category",
+			"style": {
+				"disableScroll": true,
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"tabBar": {
@@ -98,10 +119,6 @@
 			{
 				"pagePath": "pages/index/index",
 				"text": "首页"
-			},
-			{
-				"pagePath": "pages/category/index",
-				"text": "分类"
 			},
 			{
 				"pagePath": "pages/my/index",
