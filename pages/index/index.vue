@@ -96,7 +96,7 @@
   const publisherNames = computed(() => Object.keys(selectedPublishers.value))
 
   // --- 从 tree 动态提取 ---
-  const sectionKeys = Object.keys(textbookTree).filter(k => k !== '学数学最重要的刷习题在这里')
+  const sectionKeys = Object.keys(textbookTree)
   const currentSection = ref('小学')
 
   const currentSubjects = computed(() => {
