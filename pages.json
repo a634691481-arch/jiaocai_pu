@@ -16,7 +16,7 @@
 			}
 		},
 		{
-			"path": "pages/category/index",
+			"path": "pages/index/category",
 			"style": {
 				"disableScroll": false,
 				"enablePullDownRefresh": false,
@@ -74,14 +74,14 @@
 			}
 		},
 		{
-			"path": "pages/category/list",
+			"path": "pages/index/list",
 			"style": {
 				"disableScroll": true,
 				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path": "pages/category/detail",
+			"path": "pages/index/detail",
 			"style": {
 				"disableScroll": true,
 				"enablePullDownRefresh": false
