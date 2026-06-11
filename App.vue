@@ -44,4 +44,8 @@
   @import 'tailwindcss/components';
 
   @import './common/css/core.scss';
+  .flex-col {
+    display: flex !important;
+    flex-direction: column !important;
+  }
 </style>
