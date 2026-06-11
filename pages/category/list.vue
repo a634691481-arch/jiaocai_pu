@@ -20,20 +20,37 @@
   </yy-paging>
 </template>
 
-<script>
-export default {
-  data() { return { navTitle: '教材列表', grade: '', subject: '', state: { dataList: [] } } },
-  onLoad(options) {
-    this.grade = options.grade || ''; this.subject = options.subject || ''
-    this.navTitle = decodeURIComponent(options.title || '教材列表')
-  },
-  methods: {
-    async queryList(pageIndex, pageSize) {
-      const res = await vk.callFunction({ url: 'client/pub_index.getTextbookList', data: { grade: this.grade, subject: this.subject, pageIndex, pageSize } })
-      if (res.code === 1) { this.$refs.paging.complete(res.data || []) } else { this.$refs.paging.complete(false) }
-    },
-    goDetail(item) { vk.navigateTo(`/pages/category/detail?id=${item._id}`) },
-    onCoverError(item) { item.cover = '' },
-  },
+<script setup>
+const paging = ref(null)
+
+const navTitle = ref('教材列表')
+const grade = ref('')
+const subject = ref('')
+const state = reactive({ dataList: [] })
+
+onLoad((options) => {
+  grade.value = options.grade || ''
+  subject.value = options.subject || ''
+  navTitle.value = decodeURIComponent(options.title || '教材列表')
+})
+
+async function queryList(pageIndex, pageSize) {
+  const res = await vk.callFunction({
+    url: 'client/pub_index.getTextbookList',
+    data: { grade: grade.value, subject: subject.value, pageIndex, pageSize },
+  })
+  if (res.code === 1) {
+    paging.value.complete(res.data || [])
+  } else {
+    paging.value.complete(false)
+  }
+}
+
+function goDetail(item) {
+  vk.navigateTo(`/pages/category/detail?id=${item._id}`)
+}
+
+function onCoverError(item) {
+  item.cover = ''
 }
 </script>
