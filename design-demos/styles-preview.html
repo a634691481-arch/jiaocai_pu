@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>教材铺 · 三套设计风格预览</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #e5e7eb;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      display: flex;
+      gap: 32px;
+      max-width: 1280px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .style-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .style-label {
+      text-align: center;
+    }
+
+    .style-label h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+
+    .style-label p {
+      font-size: 13px;
+      color: #6b7280;
+      max-width: 360px;
+      line-height: 1.6;
+    }
+
+    .phones-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .phone-wrapper .page-name {
+      font-size: 11px;
+      color: #9ca3af;
+      font-weight: 500;
+      letter-spacing: .5px;
+    }
+
+    .phone {
+      width: 320px;
+      height: 620px;
+      border-radius: 36px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      box-shadow:
+        0 20px 50px rgba(0, 0, 0, .18),
+        0 0 0 2px #1f2937,
+        0 0 0 6px #374151;
+      position: relative;
+      scrollbar-width: none;
+    }
+
+    .phone::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ========== 风格 1: 温润书卷 Warm Academic ========== */
+    .style1 {
+      background: #faf8f6;
+      color: #292524;
+    }
+
+    .style1 .top-nav {
+      padding: 14px 16px 10px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: #57534e;
+      border-bottom: 1px solid #e8e4df;
+    }
+
+    .style1 .page-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* tabs */
+    .style1 .section-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 0;
+    }
+
+    .style1 .section-tab {
+      padding: 7px 18px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: .2s;
+      color: #78716c;
+      background: #fff;
+      border: 1px solid #e8e4df;
+    }
+
+    .style1 .section-tab.active {
+      background: #059669;
+      color: #fff;
+      border-color: #059669;
+      box-shadow: 0 2px 8px rgba(5, 150, 105, .25);
+    }
+
+    /* subject grid */
+    .style1 .subj-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .style1 .subj-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 18px 8px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1px solid #ece6dc;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .style1 .subj-card:hover {
+      border-color: #d4a574;
+    }
+
+    .style1 .subj-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      background: #faf8f6;
+      font-size: 20px;
+    }
+
+    .style1 .subj-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #57534e;
+    }
+
+    .style1 .subj-ver {
+      font-size: 11px;
+      color: #a8a29e;
+      margin-top: 2px;
+    }
+
+    /* login */
+    .style1 .login-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 0 20px;
+    }
+
+    .style1 .login-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 24px;
+      background: #059669;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 36px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 28px rgba(5, 150, 105, .2);
+    }
+
+    .style1 .login-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #292524;
+    }
+
+    .style1 .login-sub {
+      font-size: 13px;
+      color: #a8a29e;
+      margin-top: 4px;
+    }
+
+    .style1 .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .style1 .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 18px;
+      border: 1px solid #ece6dc;
+    }
+
+    .style1 .feature-accent {
+      width: 4px;
+      height: 30px;
+      border-radius: 2px;
+      background: #d4a574;
+    }
+
+    .style1 .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #faf8f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #059669;
+      font-size: 18px;
+    }
+
+    .style1 .feature-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #292524;
+    }
+
+    .style1 .feature-desc {
+      font-size: 12px;
+      color: #a8a29e;
+    }
+
+    .style1 .login-btn {
+      margin-top: auto;
+      padding: 14px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #059669, #047857);
+      color: #fff;
+      text-align: center;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 4px 16px rgba(5, 150, 105, .3);
+    }
+
+    /* my */
+    .style1 .user-card {
+      background: linear-gradient(135deg, rgba(5, 150, 105, .04), #fff 70%, rgba(5, 150, 105, .08));
+      border-radius: 22px;
+      padding: 20px;
+      border: 1px solid #ece6dc;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .style1 .user-card .deco1 {
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(5, 150, 105, .06);
+    }
+
+    .style1 .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #e8e4df;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+    }
+
+    .style1 .user-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #292524;
+    }
+
+    .style1 .user-sub {
+      font-size: 12px;
+      color: #a8a29e;
+    }
+
+    .style1 .menu-card {
+      background: #fff;
+      border-radius: 22px;
+      border: 1px solid #ece6dc;
+      overflow: hidden;
+    }
+
+    .style1 .menu-row {
+      padding: 15px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #f5f0eb;
+      font-size: 14px;
+      font-weight: 600;
+      color: #292524;
+    }
+
+    .style1 .menu-row:last-child {
+      border: none;
+    }
+
+    .style1 .menu-icon {
+      color: #059669;
+      font-size: 18px;
+    }
+
+    .style1 .menu-arrow {
+      margin-left: auto;
+      color: #d6d3d1;
+    }
+
+    .style1 .dl-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #ece6dc;
+      margin-top: 10px;
+    }
+
+    .style1 .dl-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #fffbeb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    /* ========== 风格 2: 清新活力 Fresh Vibrant ========== */
+    .style2 {
+      background: #fff;
+      color: #111827;
+    }
+
+    .style2 .top-nav {
+      padding: 14px 16px 8px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+      background: #fff;
+    }
+
+    .style2 .page-content {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .style2 .section-tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+    }
+
+    .style2 .section-tab {
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: .2s;
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .style2 .section-tab.active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      box-shadow: 0 3px 12px rgba(16, 185, 129, .35);
+    }
+
+    .style2 .subj-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .style2 .subj-card {
+      border-radius: 18px;
+      padding: 18px 8px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: .2s;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
+    }
+
+    .style2 .subj-card:hover {
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .1);
+      transform: translateY(-2px);
+    }
+
+    .style2 .subj-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      font-size: 22px;
+      background: rgba(255, 255, 255, .7);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .06);
+    }
+
+    .style2 .subj-name {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .style2 .subj-ver {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    /* login */
+    .style2 .login-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 0 18px;
+      position: relative;
+    }
+
+    .style2 .login-bg-glow {
+      position: absolute;
+      top: -30px;
+      left: -40px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, .12);
+      filter: blur(40px);
+    }
+
+    .style2 .login-bg-glow2 {
+      position: absolute;
+      top: -20px;
+      right: -30px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(5, 150, 105, .08);
+      filter: blur(40px);
+    }
+
+    .style2 .login-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 36px;
+      margin-bottom: 14px;
+      z-index: 1;
+      box-shadow: 0 8px 28px rgba(16, 185, 129, .35);
+    }
+
+    .style2 .login-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #111827;
+      z-index: 1;
+    }
+
+    .style2 .login-sub {
+      font-size: 13px;
+      color: #9ca3af;
+      z-index: 1;
+      margin-top: 4px;
+    }
+
+    .style2 .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .style2 .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
+
+    .style2 .feature-accent {
+      width: 4px;
+      height: 36px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, #10b981, #059669);
+    }
+
+    .style2 .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(16, 185, 129, .08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #10b981;
+      font-size: 20px;
+    }
+
+    .style2 .feature-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .style2 .feature-desc {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .style2 .login-btn {
+      margin-top: auto;
+      padding: 14px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      text-align: center;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, .35);
+    }
+
+    /* my */
+    .style2 .user-card {
+      background: linear-gradient(135deg, rgba(16, 185, 129, .06), #fff 60%);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 14px rgba(0, 0, 0, .05);
+    }
+
+    .style2 .user-card .deco1 {
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, .08);
+    }
+
+    .style2 .user-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+    }
+
+    .style2 .user-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .style2 .user-sub {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .style2 .menu-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
+
+    .style2 .menu-row {
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .style2 .menu-row:last-child {
+      border: none;
+    }
+
+    .style2 .menu-icon {
+      color: #10b981;
+      font-size: 18px;
+    }
+
+    .style2 .menu-arrow {
+      margin-left: auto;
+      color: #d1d5db;
+    }
+
+    .style2 .dl-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, .04);
+      margin-top: 10px;
+    }
+
+    .style2 .dl-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #fef3c7, #fffbeb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    /* ========== 风格 3: 极简留白 Minimal White ========== */
+    .style3 {
+      background: #fcfcfc;
+      color: #1a1a1a;
+    }
+
+    .style3 .top-nav {
+      padding: 16px 16px 12px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      letter-spacing: .5px;
+    }
+
+    .style3 .page-content {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .style3 .section-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+    }
+
+    .style3 .section-tab {
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: .2s;
+      color: #737373;
+      background: transparent;
+    }
+
+    .style3 .section-tab.active {
+      background: #1a1a1a;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .style3 .subj-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+    }
+
+    .style3 .subj-card {
+      padding: 20px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: .2s;
+      border-right: 1px solid #f0f0f0;
+      border-bottom: 1px solid #f0f0f0;
+      background: #fff;
+    }
+
+    .style3 .subj-card:nth-child(3n) {
+      border-right: none;
+    }
+
+    .style3 .subj-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .style3 .subj-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: #404040;
+    }
+
+    .style3 .subj-ver {
+      font-size: 11px;
+      color: #a3a3a3;
+      margin-top: 2px;
+    }
+
+    /* login */
+    .style3 .login-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 0 24px;
+    }
+
+    .style3 .login-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .style3 .login-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: 1px;
+    }
+
+    .style3 .login-sub {
+      font-size: 13px;
+      color: #a3a3a3;
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    .style3 .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .style3 .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 0;
+    }
+
+    .style3 .feature-accent {
+      display: none;
+    }
+
+    .style3 .feature-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #737373;
+      font-size: 20px;
+    }
+
+    .style3 .feature-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .style3 .feature-desc {
+      font-size: 12px;
+      color: #a3a3a3;
+    }
+
+    .style3 .login-btn {
+      margin-top: auto;
+      padding: 16px;
+      background: #1a1a1a;
+      color: #fff;
+      text-align: center;
+      font-weight: 600;
+      font-size: 15px;
+      border-radius: 12px;
+      letter-spacing: 1px;
+    }
+
+    /* my */
+    .style3 .user-card {
+      padding: 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .style3 .user-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .style3 .user-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .style3 .user-sub {
+      font-size: 12px;
+      color: #a3a3a3;
+      margin-top: 2px;
+    }
+
+    .style3 .menu-card {
+      border-top: 1px solid #e5e5e5;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .style3 .menu-row {
+      padding: 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .style3 .menu-row:last-child {
+      border: none;
+    }
+
+    .style3 .menu-icon {
+      color: #737373;
+      font-size: 18px;
+    }
+
+    .style3 .menu-arrow {
+      margin-left: auto;
+      color: #d4d4d4;
+    }
+
+    .style3 .dl-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .style3 .dl-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    /* icons placeholder */
+    .ic {
+      font-style: normal;
+    }
+
+    @media (max-width: 1100px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- ========= 风格 1: 温润书卷 ========= -->
+    <div class="style-col">
+      <div class="style-label">
+        <h2>风格一 · 温润书卷</h2>
+        <p>纸色暖底 · 大圆角 · 克制阴影 · 墨水色文字<br>关键词: 温润、学术、呼吸感</p>
+      </div>
+      <div class="phones-row">
+
+        <!-- 首页 -->
+        <div class="phone-wrapper">
+          <span class="page-name">首页</span>
+          <div class="phone style1">
+            <div class="top-nav">教材铺</div>
+            <div class="page-content">
+              <div class="section-tabs">
+                <span class="section-tab active">小学</span>
+                <span class="section-tab">初中</span>
+                <span class="section-tab">高中</span>
+                <span class="section-tab">大学</span>
+              </div>
+              <div class="subj-grid">
+                <div class="subj-card">
+                  <div class="subj-icon">📖</div><span class="subj-name">语文</span><span class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">📐</div><span class="subj-name">数学</span><span class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">🌍</div><span class="subj-name">英语</span><span class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">🔬</div><span class="subj-name">科学</span><span class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">⚖️</div><span class="subj-name">道德与法治</span><span class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">🎵</div><span class="subj-name">音乐</span><span class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">🎨</div><span class="subj-name">美术</span><span class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">🏃</div><span class="subj-name">体育与健康</span><span class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">✍️</div><span class="subj-name">书法练习</span><span class="subj-ver">1 版</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 登录页 -->
+        <div class="phone-wrapper">
+          <span class="page-name">登录</span>
+          <div class="phone style1">
+            <div class="page-content" style="height:100%;">
+              <div style="flex:1;display:flex;flex-direction:column;">
+                <div class="login-hero">
+                  <div class="login-logo">📘</div>
+                  <div class="login-title">教材铺</div>
+                  <div class="login-sub">精选教材 · 免费下载</div>
+                </div>
+                <div class="feature-list">
+                  <div class="feature-item">
+                    <div class="feature-accent"></div>
+                    <div class="feature-icon">📄</div>
+                    <div>
+                      <div class="feature-title">海量资源</div>
+                      <div class="feature-desc">覆盖小学到大学全部年级</div>
+                    </div>
+                  </div>
+                  <div class="feature-item">
+                    <div class="feature-accent"></div>
+                    <div class="feature-icon">⬇</div>
+                    <div>
+                      <div class="feature-title">免费下载</div>
+                      <div class="feature-desc">观看广告后即可免费下载</div>
+                    </div>
+                  </div>
+                  <div class="feature-item">
+                    <div class="feature-accent"></div>
+                    <div class="feature-icon">🕐</div>
+                    <div>
+                      <div class="feature-title">下载记录</div>
+                      <div class="feature-desc">登录后可查看和管理历史</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="login-btn">立即登录</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 我的 -->
+        <div class="phone-wrapper">
+          <span class="page-name">我的</span>
+          <div class="phone style1">
+            <div class="top-nav">我的</div>
+            <div class="page-content">
+              <div class="user-card">
+                <div class="deco1"></div>
+                <div class="user-avatar">🙂</div>
+                <div style="flex:1;z-index:1">
+                  <div class="user-name">微信用户</div>
+                  <div class="user-sub">欢迎使用教材铺 📖</div>
+                </div>
+                <span style="z-index:1;color:#d6d3d1">›</span>
+              </div>
+              <div class="menu-card">
+                <div class="menu-row"><span class="menu-icon">⬇</span> 下载历史 <span class="menu-arrow">›</span></div>
+                <div class="menu-row"><span class="menu-icon">🛡</span> 隐私与协议 <span class="menu-arrow">›</span></div>
+                <div class="menu-row"><span class="menu-icon">🎨</span> 主题切换 <span class="menu-arrow">›</span></div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#57534e;margin-bottom:8px;">最近下载</div>
+                <div class="dl-row">
+                  <div class="dl-icon">📄</div>
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:600;color:#292524">语文一年级上册</div>
+                    <div style="font-size:11px;color:#a8a29e">2024-06-08</div>
+                  </div><span style="color:#d6d3d1">›</span>
+                </div>
+                <div class="dl-row">
+                  <div class="dl-icon">📄</div>
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:600;color:#292524">数学一年级上册</div>
+                    <div style="font-size:11px;color:#a8a29e">2024-06-07</div>
+                  </div><span style="color:#d6d3d1">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========= 风格 2: 清新活力 ========= -->
+    <div class="style-col">
+      <div class="style-label">
+        <h2>风格二 · 清新活力</h2>
+        <p>纯白底 · 色彩渐变 · 明确阴影 · 绿光晕<br>关键词: 明亮、年轻、亲和力</p>
+      </div>
+      <div class="phones-row">
+
+        <div class="phone-wrapper">
+          <span class="page-name">首页</span>
+          <div class="phone style2">
+            <div class="top-nav">教材铺</div>
+            <div class="page-content">
+              <div class="section-tabs">
+                <span class="section-tab active">小学</span>
+                <span class="section-tab">初中</span>
+                <span class="section-tab">高中</span>
+                <span class="section-tab">大学</span>
+              </div>
+              <div class="subj-grid">
+                <div class="subj-card" style="background:#FEF2F2;">
+                  <div class="subj-icon">📖</div><span class="subj-name" style="color:#DC2626">语文</span><span
+                    class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card" style="background:#EFF6FF;">
+                  <div class="subj-icon">📐</div><span class="subj-name" style="color:#2563EB">数学</span><span
+                    class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card" style="background:#F5F3FF;">
+                  <div class="subj-icon">🌍</div><span class="subj-name" style="color:#7C3AED">英语</span><span
+                    class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card" style="background:#F0FDFA;">
+                  <div class="subj-icon">🔬</div><span class="subj-name" style="color:#0D9488">科学</span><span
+                    class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card" style="background:#FDF2F8;">
+                  <div class="subj-icon">⚖️</div><span class="subj-name" style="color:#DB2777">道德与法治</span><span
+                    class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card" style="background:#FAF5FF;">
+                  <div class="subj-icon">🎵</div><span class="subj-name" style="color:#9333EA">音乐</span><span
+                    class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card" style="background:#FDF4FF;">
+                  <div class="subj-icon">🎨</div><span class="subj-name" style="color:#C026D3">美术</span><span
+                    class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card" style="background:#FFF7ED;">
+                  <div class="subj-icon">🏃</div><span class="subj-name" style="color:#EA580C">体育与健康</span><span
+                    class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card" style="background:#FFFBEB;">
+                  <div class="subj-icon">✍️</div><span class="subj-name" style="color:#92400E">书法练习</span><span
+                    class="subj-ver">1 版</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-wrapper">
+          <span class="page-name">登录</span>
+          <div class="phone style2">
+            <div class="page-content" style="height:100%;position:relative;">
+              <div class="login-bg-glow"></div>
+              <div class="login-bg-glow2"></div>
+              <div style="flex:1;display:flex;flex-direction:column;position:relative;z-index:1;">
+                <div class="login-hero">
+                  <div class="login-logo">📘</div>
+                  <div class="login-title">教材铺</div>
+                  <div class="login-sub">精选教材 · 免费下载</div>
+                </div>
+                <div class="feature-list">
+                  <div class="feature-item">
+                    <div class="feature-accent"></div>
+                    <div class="feature-icon">📄</div>
+                    <div>
+                      <div class="feature-title">海量资源</div>
+                      <div class="feature-desc">覆盖小学到大学全部年级</div>
+                    </div>
+                  </div>
+                  <div class="feature-item">
+                    <div class="feature-accent"></div>
+                    <div class="feature-icon">⬇</div>
+                    <div>
+                      <div class="feature-title">免费下载</div>
+                      <div class="feature-desc">观看广告后即可免费下载</div>
+                    </div>
+                  </div>
+                  <div class="feature-item">
+                    <div class="feature-accent"></div>
+                    <div class="feature-icon">🕐</div>
+                    <div>
+                      <div class="feature-title">下载记录</div>
+                      <div class="feature-desc">登录后可查看和管理历史</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="login-btn" style="position:relative;z-index:2;">立即登录</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-wrapper">
+          <span class="page-name">我的</span>
+          <div class="phone style2">
+            <div class="top-nav">我的</div>
+            <div class="page-content">
+              <div class="user-card">
+                <div class="deco1"></div>
+                <div class="user-avatar">🙂</div>
+                <div style="flex:1;z-index:1">
+                  <div class="user-name">微信用户</div>
+                  <div class="user-sub">欢迎使用教材铺 📖</div>
+                </div>
+                <span style="z-index:1;color:#d1d5db">›</span>
+              </div>
+              <div class="menu-card">
+                <div class="menu-row"><span class="menu-icon">⬇</span> 下载历史 <span class="menu-arrow">›</span></div>
+                <div class="menu-row"><span class="menu-icon">🛡</span> 隐私与协议 <span class="menu-arrow">›</span></div>
+                <div class="menu-row"><span class="menu-icon">🎨</span> 主题切换 <span class="menu-arrow">›</span></div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#111827;margin-bottom:8px;">最近下载</div>
+                <div class="dl-row">
+                  <div class="dl-icon">📄</div>
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:600;color:#111827">语文一年级上册</div>
+                    <div style="font-size:11px;color:#9ca3af">2024-06-08</div>
+                  </div><span style="color:#d1d5db">›</span>
+                </div>
+                <div class="dl-row">
+                  <div class="dl-icon">📄</div>
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:600;color:#111827">数学一年级上册</div>
+                    <div style="font-size:11px;color:#9ca3af">2024-06-07</div>
+                  </div><span style="color:#d1d5db">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========= 风格 3: 极简留白 ========= -->
+    <div class="style-col">
+      <div class="style-label">
+        <h2>风格三 · 极简留白</h2>
+        <p>白底 · 无阴影 · 线分隔 · 黑灰克制<br>关键词: 干净、克制、杂志感</p>
+      </div>
+      <div class="phones-row">
+
+        <div class="phone-wrapper">
+          <span class="page-name">首页</span>
+          <div class="phone style3">
+            <div class="top-nav">教材铺</div>
+            <div class="page-content">
+              <div class="section-tabs">
+                <span class="section-tab active">小学</span>
+                <span class="section-tab">初中</span>
+                <span class="section-tab">高中</span>
+                <span class="section-tab">大学</span>
+              </div>
+              <div class="subj-grid">
+                <div class="subj-card">
+                  <div class="subj-icon">📖</div><span class="subj-name">语文</span><span class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">📐</div><span class="subj-name">数学</span><span class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">🌍</div><span class="subj-name">英语</span><span class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">🔬</div><span class="subj-name">科学</span><span class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">⚖️</div><span class="subj-name">道德与法治</span><span class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">🎵</div><span class="subj-name">音乐</span><span class="subj-ver">2 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">🎨</div><span class="subj-name">美术</span><span class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card">
+                  <div class="subj-icon">🏃</div><span class="subj-name">体育与健康</span><span class="subj-ver">1 版</span>
+                </div>
+                <div class="subj-card" style="border-bottom:none;">
+                  <div class="subj-icon">✍️</div><span class="subj-name">书法练习</span><span class="subj-ver">1 版</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-wrapper">
+          <span class="page-name">登录</span>
+          <div class="phone style3">
+            <div class="page-content" style="height:100%;">
+              <div style="flex:1;display:flex;flex-direction:column;">
+                <div class="login-hero">
+                  <div class="login-logo">📘</div>
+                  <div class="login-title">教材铺</div>
+                  <div class="login-sub">精选教材 · 免费下载</div>
+                </div>
+                <div class="feature-list">
+                  <div class="feature-item">
+                    <div class="feature-icon">📄</div>
+                    <div>
+                      <div class="feature-title">海量资源</div>
+                      <div class="feature-desc">覆盖小学到大学全部年级</div>
+                    </div>
+                  </div>
+                  <div class="feature-item">
+                    <div class="feature-icon">⬇</div>
+                    <div>
+                      <div class="feature-title">免费下载</div>
+                      <div class="feature-desc">观看广告后即可免费下载</div>
+                    </div>
+                  </div>
+                  <div class="feature-item">
+                    <div class="feature-icon">🕐</div>
+                    <div>
+                      <div class="feature-title">下载记录</div>
+                      <div class="feature-desc">登录后可查看和管理历史</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="login-btn">立即登录</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-wrapper">
+          <span class="page-name">我的</span>
+          <div class="phone style3">
+            <div class="top-nav">我的</div>
+            <div class="page-content">
+              <div class="user-card">
+                <div class="user-avatar">🙂</div>
+                <div style="flex:1">
+                  <div class="user-name">微信用户</div>
+                  <div class="user-sub">欢迎使用教材铺 📖</div>
+                </div>
+                <span style="color:#d4d4d4">›</span>
+              </div>
+              <div class="menu-card">
+                <div class="menu-row"><span class="menu-icon">⬇</span> 下载历史 <span class="menu-arrow">›</span></div>
+                <div class="menu-row"><span class="menu-icon">🛡</span> 隐私与协议 <span class="menu-arrow">›</span></div>
+                <div class="menu-row"><span class="menu-icon">🎨</span> 主题切换 <span class="menu-arrow">›</span></div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:6px;">最近下载</div>
+                <div class="dl-row">
+                  <div class="dl-icon">📄</div>
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:500;color:#1a1a1a">语文一年级上册</div>
+                    <div style="font-size:11px;color:#a3a3a3">2024-06-08</div>
+                  </div><span style="color:#d4d4d4">›</span>
+                </div>
+                <div class="dl-row">
+                  <div class="dl-icon">📄</div>
+                  <div style="flex:1">
+                    <div style="font-size:13px;font-weight:500;color:#1a1a1a">数学一年级上册</div>
+                    <div style="font-size:11px;color:#a3a3a3">2024-06-07</div>
+                  </div><span style="color:#d4d4d4">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+</html>
