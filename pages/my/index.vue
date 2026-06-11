@@ -54,58 +54,58 @@
   </yy-paging>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      isLogin: false,
-      userInfo: {},
-      state: { dataList: [] },
-    }
-  },
-  onShow() {
-    this.checkLogin()
-  },
-  methods: {
-    checkLogin() {
-      const user = vk.pubfn.getUserInfo()
-      this.isLogin = !!user.uid
-      this.userInfo = {
-        name: user.nickname || user.username || '',
-        avatar: user.avatar || user.avatar_file?.url || '',
-      }
-      if (this.isLogin) {
-        this.$refs.paging?.reload()
-      }
-    },
-    handleLoginClick() {
-      if (this.isLogin) return
-      this.goLogin()
-    },
-    goLogin() {
-      vk.navigateTo('/pages/login/index')
-    },
-    async queryList(pageIndex, pageSize) {
-      if (!this.isLogin) {
-        this.$refs.paging?.complete([])
-        return
-      }
-      const res = await vk.callFunction({
-        url: 'client/pub_index.getMyDownloads',
-        data: { pageIndex, pageSize },
-      })
-      if (res.code === 1) {
-        this.$refs.paging?.complete(res.data || [])
-      } else {
-        this.$refs.paging?.complete(false)
-      }
-    },
-    formatTime(ts) {
-      if (!ts) return ''
-      const d = new Date(ts)
-      const pad = n => String(n).padStart(2, '0')
-      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
-    },
-  },
+<script setup>
+const paging = ref(null)
+
+const isLogin = ref(false)
+const userInfo = ref({})
+const state = reactive({ dataList: [] })
+
+onShow(() => {
+  checkLogin()
+})
+
+function checkLogin() {
+  const user = vk.pubfn.getUserInfo()
+  isLogin.value = !!user.uid
+  userInfo.value = {
+    name: user.nickname || user.username || '',
+    avatar: user.avatar || user.avatar_file?.url || '',
+  }
+  if (isLogin.value) {
+    paging.value?.reload()
+  }
+}
+
+function handleLoginClick() {
+  if (isLogin.value) return
+  goLogin()
+}
+
+function goLogin() {
+  vk.navigateTo('/pages/login/index')
+}
+
+async function queryList(pageIndex, pageSize) {
+  if (!isLogin.value) {
+    paging.value?.complete([])
+    return
+  }
+  const res = await vk.callFunction({
+    url: 'client/pub_index.getMyDownloads',
+    data: { pageIndex, pageSize },
+  })
+  if (res.code === 1) {
+    paging.value?.complete(res.data || [])
+  } else {
+    paging.value?.complete(false)
+  }
+}
+
+function formatTime(ts) {
+  if (!ts) return ''
+  const d = new Date(ts)
+  const pad = n => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 </script>
