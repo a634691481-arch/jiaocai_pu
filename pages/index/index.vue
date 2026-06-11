@@ -56,58 +56,58 @@
   </yy-paging>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      banners: [],
-      state: { dataList: [] },
-    }
-  },
-  onLoad() {
-    this.loadBanners()
-  },
-  methods: {
-    async loadBanners() {
-      const res = await vk.callFunction({ url: 'client/pub_index.getBanners' })
-      if (res.code === 1) this.banners = res.data || []
-    },
-    async queryList(pageIndex, pageSize) {
-      const res = await vk.callFunction({
-        url: 'client/pub_index.getHotTextbooks',
-        data: { limit: pageSize },
-      })
-      if (res.code === 1) {
-        this.$refs.paging.complete(res.data || [])
-      } else {
-        this.$refs.paging.complete(false)
-      }
-    },
-    onBannerTap(banner) {
-      if (banner.linkType === 'textbook' && banner.linkValue) {
-        vk.navigateTo(`/pages/category/detail?id=${banner.linkValue}`)
-      } else if (banner.linkType === 'url' && banner.linkValue) {
-        // #ifdef H5
-        window.open(banner.linkValue)
-        // #endif
-      }
-    },
-    goDetail(item) {
-      vk.navigateTo(`/pages/category/detail?id=${item._id}`)
-    },
-    goSearch() {
-      vk.navigateTo('/pages/index/search')
-    },
-    switchTab(index) {
-      // 切换到分类 Tab
-      vk.vuex.set('$tabbar.activeIndex', index)
-      vk.switchTab('/pages/category/index')
-    },
-    formatSize(bytes) {
-      if (!bytes) return ''
-      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + 'KB'
-      return (bytes / (1024 * 1024)).toFixed(1) + 'MB'
-    },
-  },
+<script setup>
+const paging = ref(null)
+const banners = ref([])
+const state = reactive({ dataList: [] })
+
+onLoad(() => {
+  loadBanners()
+})
+
+async function loadBanners() {
+  const res = await vk.callFunction({ url: 'client/pub_index.getBanners' })
+  if (res.code === 1) banners.value = res.data || []
+}
+
+async function queryList(pageIndex, pageSize) {
+  const res = await vk.callFunction({
+    url: 'client/pub_index.getHotTextbooks',
+    data: { limit: pageSize },
+  })
+  if (res.code === 1) {
+    paging.value.complete(res.data || [])
+  } else {
+    paging.value.complete(false)
+  }
+}
+
+function onBannerTap(banner) {
+  if (banner.linkType === 'textbook' && banner.linkValue) {
+    vk.navigateTo(`/pages/category/detail?id=${banner.linkValue}`)
+  } else if (banner.linkType === 'url' && banner.linkValue) {
+    // #ifdef H5
+    window.open(banner.linkValue)
+    // #endif
+  }
+}
+
+function goDetail(item) {
+  vk.navigateTo(`/pages/category/detail?id=${item._id}`)
+}
+
+function goSearch() {
+  vk.navigateTo('/pages/index/search')
+}
+
+function switchTab(index) {
+  vk.vuex.set('$tabbar.activeIndex', index)
+  vk.switchTab('/pages/category/index')
+}
+
+function formatSize(bytes) {
+  if (!bytes) return ''
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + 'KB'
+  return (bytes / (1024 * 1024)).toFixed(1) + 'MB'
 }
 </script>
