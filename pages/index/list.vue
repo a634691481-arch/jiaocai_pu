@@ -102,10 +102,13 @@
 </template>
 
 <script setup>
+  import textbookData from '@/static/textbook-data.json'
+  import treeData from '@/static/textbook-tree.json'
+
   const th = uni.$u.color
 
   const pagingConfig = ref({
-    auto: true,
+    auto: false,
     refresherEnabled: false,
     showRefresherWhenReload: false,
     showTabbar: false,
@@ -118,27 +121,40 @@
   const paging = ref()
   const loaded = ref(false)
 
-  const grade = ref('')
+  const section = ref('')
   const subject = ref('')
   const publisher = ref('')
   const pageTitle = ref('')
 
   const currentGradeFilter = ref('')
-
   const gradeFilters = ref(['全部年级'])
 
-  async function loadGrades() {
-    const res = await vk.callFunction({
-      url: 'client/pub.index.getGrades',
-      data: {
-        name: grade.value || undefined,
-        subject: subject.value,
-        publisher: publisher.value || undefined,
-      },
+  // 从 treeData 提取当前学段下当前科目+出版社的所有年级
+  function loadGrades() {
+    const secData = treeData[section.value]
+    if (!secData) { gradeFilters.value = ['全部年级']; return }
+    const gradesSet = new Set()
+    Object.entries(secData).forEach(([subj, publishers]) => {
+      if (subj !== subject.value) return
+      Object.entries(publishers).forEach(([pub, grades]) => {
+        if (publisher.value && pub !== publisher.value) return
+        grades.forEach(g => gradesSet.add(g))
+      })
     })
-    if (res.code === 1 && res.data) {
-      gradeFilters.value = ['全部年级', ...res.data.map(g => g.name)]
-    }
+    gradeFilters.value = ['全部年级', ...gradesSet]
+  }
+
+  // 本地过滤教材数据（学段 + 科目 ± 出版社）
+  function loadLocalData() {
+    const filtered = textbookData.filter(item => {
+      if (item.section !== section.value) return false
+      if (item.subject !== subject.value) return false
+      if (publisher.value && item.publisher !== publisher.value) return false
+      return true
+    })
+    state.value.dataList = filtered
+    loaded.value = true
+    paging.value?.complete(filtered)
   }
 
   const filteredList = computed(() => {
@@ -151,13 +167,13 @@
   }
 
   onLoad(options => {
-    grade.value = options.grade || ''
+    section.value = options.section || ''
     subject.value = options.subject || ''
     publisher.value = decodeURIComponent(options.publisher || '')
     pageTitle.value = decodeURIComponent(options.title || '')
-    if (options.grade) currentGradeFilter.value = options.grade
     if (pageTitle.value) pagingConfig.value.navTitle = pageTitle.value
     loadGrades()
+    loadLocalData()
   })
   onShow(() => {})
 
@@ -171,31 +187,14 @@
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
   }
 
-  async function queryList(page, limit) {
-    try {
-      const res = await vk.callFunction({
-        url: 'client/pub.index.getTextbookList',
-        data: {
-          grade: grade.value || undefined,
-          subject: subject.value,
-          publisher: publisher.value || undefined,
-          pageIndex: page,
-          pageSize: limit,
-        },
-      })
-      if (res.code === 1) {
-        loaded.value = true
-        paging.value?.complete(res.data || [])
-      } else {
-        paging.value?.complete(false)
-      }
-    } catch (e) {
-      paging.value?.complete(false)
-    }
+  function queryList() {
+    loadLocalData()
   }
 
   function goDetail(item) {
-    vk.navigateTo(`/pages/index/detail?id=${item._id}`)
+    vk.navigateTo(
+      `/pages/index/detail?title=${encodeURIComponent(item.title)}&subject=${encodeURIComponent(item.subject)}&publisher=${encodeURIComponent(item.publisher)}&grade=${encodeURIComponent(item.grade)}&section=${encodeURIComponent(item.section)}&fileSize=${item.fileSize}&fileUrl=${encodeURIComponent(item.fileUrl)}`,
+    )
   }
 
   function handleDownload(item) {
