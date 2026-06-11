@@ -36,7 +36,7 @@
           </view>
           <view class="flex-1">
             <text class="text-base font-bold" style="color: #4a4a4a">{{ userInfo.nickname || '微信用户' }}</text>
-            <text class="mt-0.5 text-xs" style="color: #878787">欢迎使用教材宝 📖</text>
+            <text class="mt-0.5 text-xs" style="color: #878787">欢迎使用教材铺 📖</text>
           </view>
           <yy-icon name="ri:arrow-right-s-line" size="20" style="color: #d6c6e1" />
         </view>
@@ -100,24 +100,6 @@
           <text class="flex-1 text-sm font-medium" style="color: #4a4a4a">隐私与协议</text>
           <yy-icon name="ri:arrow-right-s-line" size="16" style="color: #d6c6e1" />
         </view>
-        <view class="h-px mx-4" style="background: #e9e4ed" />
-        <view
-          class="active:bg-gray-50 flex items-center gap-4 p-4 transition-all duration-150"
-          hover-class="active-scale"
-          @click="showThemePicker = true"
-        >
-          <view
-            class="w-9 h-9 rounded-xl flex items-center justify-center"
-            :style="{ background: `linear-gradient(135deg, #D6C6E1, rgba(139,95,191,0.08))` }"
-          >
-            <yy-icon name="ri:paint-brush-line" size="18" color="#8B5FBF" />
-          </view>
-          <text class="flex-1 text-sm font-medium" style="color: #4a4a4a">主题切换</text>
-          <view
-            class="w-5 h-5 rounded-full border-2 shrink-0"
-            :style="{ backgroundcolor: uni.$u.color.primary, borderColor: '#D6C6E1' }"
-          />
-        </view>
         <view v-if="userInfo._id" class="h-px mx-4" style="background: #e9e4ed" />
         <view
           v-if="userInfo._id"
@@ -127,7 +109,7 @@
         >
           <view
             class="w-9 h-9 rounded-xl flex items-center justify-center"
-            style="background: linear-gradient(135deg, #fef2f2, rgba(239,68,68,0.08))"
+            style="background: linear-gradient(135deg, #fef2f2, rgba(239, 68, 68, 0.08))"
           >
             <yy-icon name="ri:logout-box-r-line" size="18" color="#ef4444" />
           </view>
@@ -170,7 +152,6 @@
       </view>
     </view>
   </yy-paging>
-
 </template>
 
 <script setup>
@@ -192,8 +173,6 @@
   const userInfo = ref({})
   const downloadedList = ref([])
 
-  const showThemePicker = ref(false)
-
   onLoad(() => {
     updateUserInfo()
   })
@@ -211,7 +190,7 @@
   }
 
   async function loadDownloaded() {
-    const res = await vk.callFunction({ url: 'client/pub_index.getDownloadHistory', data: { limit: 5 } })
+    const res = await vk.callFunction({ url: 'client/pub.index.getMyDownloads', data: { pageIndex: 1, pageSize: 5 } })
     if (res.code === 1) downloadedList.value = res.data || []
   }
 
