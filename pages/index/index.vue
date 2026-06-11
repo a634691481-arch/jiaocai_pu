@@ -55,36 +55,30 @@
           </view>
         </scroll-view>
 
-        <!-- 加载中 -->
-        <view v-if="loadingGrade" class="py-10 text-center">
-          <text class="text-sm" style="color: #878787">加载中...</text>
-        </view>
-
-        <!-- 科目列表 -->
-        <view class="rounded-2xl overflow-hidden bg-white" style="box-shadow: 0 2rpx 12rpx rgba(139, 95, 191, 0.04)">
+        <!-- 科目卡片网格 -->
+        <view v-if="currentSubjects.length" class="grid grid-cols-2 gap-3">
           <view
-            v-for="(subject, idx) in currentSubjects"
-            :key="subject.name"
-            class="flex items-center gap-3 px-4 py-3.5 active:opacity-70 transition-opacity duration-150"
-            :style="{ borderBottom: idx < currentSubjects.length - 1 ? '0.5px solid #E9E4ED' : 'none' }"
-            @click="onSubjectClick(subject)"
+            v-for="sub in currentSubjects"
+            :key="sub.name"
+            class="rounded-2xl p-4 flex flex-col items-start gap-2 active:scale-[0.97] transition-all duration-150"
+            style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04)"
+            @click="onSubjectClick(sub)"
           >
-            <!-- 色点 + emoji -->
-            <view class="shrink-0 relative flex items-center justify-center" style="width: 52rpx; height: 52rpx">
-              <view class="rounded-xl opacity-15 absolute inset-0" :style="{ background: subject.color }" />
-              <text style="font-size: 26rpx">{{ subject.icon }}</text>
+            <view
+              class="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+              :style="{ background: sub.color + '18' }"
+            >
+              <text>{{ sub.icon }}</text>
             </view>
-            <!-- 名称 -->
-            <text class="flex-1 text-sm font-medium" style="color: #4a4a4a">{{ subject.name }}</text>
-            <!-- 版本数 -->
-            <text class="text-xs" style="color: #878787">{{ subject.publisherCount }}个版本</text>
-            <!-- 箭头 -->
-            <text class="ml-1 text-base" style="color: #d6c6e1">›</text>
+            <view class="flex flex-col gap-0.5">
+              <text class="text-sm font-semibold line-clamp-1" style="color: #4a4a4a">{{ sub.name }}</text>
+              <text class="text-xs" style="color: #878787">{{ sub.publisherCount }}个版本</text>
+            </view>
           </view>
         </view>
 
         <!-- 无数据 -->
-        <view v-if="!currentSubjects.length && !loadingGrade" class="py-10 text-center">
+        <view v-if="!currentSubjects.length" class="py-10 text-center">
           <text class="text-sm" style="color: #878787">暂无科目数据</text>
         </view>
       </view>
@@ -132,19 +126,34 @@
     })
     // 按 GRADE_PRIORITY 排序
     const order = {
-      '小学低年级':1,'小学高年级':2,'全一册':10,'上册':11,'下册':12,
+      '小学低年级':1,'小学高年级':2,'全一册':3,
+      '上册':11,'下册':12,
       '一年级':20,'二年级':30,'三年级':40,'四年级':50,'五年级':60,'六年级':70,
-      '七年级':80,'八年级':90,'九年级':100,
-      '必修':201,'必修第一册':211,'必修第二册':212,'必修第三册':213,'必修第四册':214,
-      '选择性必修第一册':241,'选择性必修第二册':242,'选择性必修第三册':243,
+      '六年级上册':61,'六年级下册':62,
+      '七年级':80,'七年级上册':81,'七年级下册':82,
+      '八年级':90,'八年级上册':91,'八年级下册':92,
+      '九年级':100,'九年级上册':101,'九年级下册':102,'九年级全一册':103,
+      '必修':201,'必修上':203,'必修下':204,
+      '必修1':210,'必修2':211,'必修3':212,'必修4':213,'必修5':214,'必修6':215,
+      '必修第一册':221,'必修第二册':222,'必修第三册':223,'必修第四册':224,
+      '选择性必修':231,
+      '选择性必修1':241,'选择性必修2':242,'选择性必修3':243,'选择性必修4':244,
+      '选择性必修5':245,'选择性必修6':246,'选择性必修7':247,
+      '选择性必修8':248,'选择性必修9':249,'选择性必修10':250,'选择性必修11':251,
+      '选择性必修上':261,'选择性必修中':262,'选择性必修下':263,
+      '选择性必修第一册':281,'选择性必修第二册':282,'选择性必修第三册':283,'选择性必修第四册':284,
+      '必修全一册':290,
+      '六年级～九年级(五四制)':500,
+      '一年级～六年级':510,'一年级～五年级':511,
+      '1年级~6年级':512,
+      '3年级至4年级':520,'3年级至6年级':521,
+      '1年级至2年级':522,'1年级至3年级':523,'1年级至4年级':524,
     }
     return [...seen].sort((a, b) => (order[a] || 999) - (order[b] || 999))
   })()
 
   const gradeList = ref(allGrades.map(name => ({ name })))
   const currentGrade = ref(allGrades.length > 0 ? allGrades[0] : '')
-  const loadingGrade = ref(false)
-
   // ===== 当前年级的科目列表 =====
   const currentSubjects = computed(() => {
     const g = currentGrade.value
