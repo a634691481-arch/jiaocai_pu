@@ -198,7 +198,15 @@
   const downloadProgress = ref(0)
 
   onLoad((options) => {
-    if (options.title) {
+    if (options.idx !== undefined) {
+      const found = textbookData[Number(options.idx)]
+      if (found) {
+        detail.value = { ...found, viewCount: 0, downloadCount: 0 }
+        pagingConfig.value.navTitle = detail.value.title
+        recordView()
+        loadStats()
+      }
+    } else if (options.title) {
       detail.value = {
         title: decodeURIComponent(options.title),
         subject: decodeURIComponent(options.subject || ''),
@@ -354,7 +362,8 @@
   }
 
   function goRelated(item) {
-    vk.navigateTo(`/pages/index/detail?id=${item._id}`)
+    const idx = textbookData.indexOf(item)
+    vk.navigateTo(`/pages/index/detail?idx=${idx}`)
   }
 
   function onCoverError() {

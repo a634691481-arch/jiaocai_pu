@@ -196,7 +196,8 @@
   }
 
   function goDetail(item) {
-    vk.navigateTo(`/pages/index/detail?id=${item._id}`)
+    const idx = textbookData.indexOf(item)
+    vk.navigateTo(`/pages/index/detail?idx=${idx}`)
   }
 
   function handleDownload(item) {
