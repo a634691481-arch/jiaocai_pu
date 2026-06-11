@@ -158,19 +158,19 @@
 
   function onBannerTap(banner) {
     if (banner.linkType === 'textbook' && banner.linkValue) {
-      vk.navigateTo(`/pages/category/detail?id=${banner.linkValue}`)
+      vk.navigateTo(`/pages/index/detail?id=${banner.linkValue}`)
     }
   }
 
   function goDetail(item) {
-    vk.navigateTo(`/pages/category/detail?id=${item._id}`)
+    vk.navigateTo(`/pages/index/detail?id=${item._id}`)
   }
   function goSearch() {
     vk.navigateTo('/pages/index/search')
   }
   function switchTab(index) {
     vk.vuex.set('$tabbar.activeIndex', index)
-    vk.switchTab('/pages/category/index')
+    vk.navigateTo('/pages/index/category')
   }
 
   function formatSize(bytes) {
