@@ -10,7 +10,7 @@
     "tabBorderStyle": "white",
     "tabFontColor": "#1f2937",
     "tabSelectedColor": "#2563eb",
-    "navTitle": "教材宝"
+    "navTitle": "教材铺"
   },
   "dark": {
     "bgColor": "#0f172a",
@@ -23,6 +23,6 @@
     "tabBorderStyle": "white",
     "tabFontColor": "#f3f4f6",
     "tabSelectedColor": "#60a5fa",
-    "navTitle": "教材宝"
+    "navTitle": "教材铺"
   }
 }
