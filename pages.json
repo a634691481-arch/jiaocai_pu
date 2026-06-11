@@ -12,7 +12,7 @@
 			"style": {
 				"disableScroll": false,
 				"enablePullDownRefresh": false,
-				"navigationBarTitleText": "教材宝"
+				"navigationBarTitleText": "教材铺"
 			}
 		},
 		{
@@ -88,6 +88,27 @@
 			}
 		}
 	],
+	"tabBar": {
+		"custom": true,
+		"color": "#9CA3AF",
+		"selectedColor": "#2563eb",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "white",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/category/index",
+				"text": "分类"
+			},
+			{
+				"pagePath": "pages/my/index",
+				"text": "我的"
+			}
+		]
+	},
 	"globalStyle": {
 		"backgroundColor": "@bgColor",
 		"backgroundColorBottom": "@bgColorBottom",
@@ -95,7 +116,7 @@
 		"backgroundTextStyle": "@bgTxtStyle",
 		"navigationBarBackgroundColor": "#2563eb",
 		"navigationBarTextStyle": "@navTxtStyle",
-		"navigationBarTitleText": "教材宝",
+		"navigationBarTitleText": "教材铺",
 		"navigationStyle": "custom"
 	}
 }
