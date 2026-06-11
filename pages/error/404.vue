@@ -10,7 +10,7 @@
     >
       <template #top>
         <u-navbar
-          :background="{ backgroundColor: state.isScroll ? '#18C9D9' : '#18C9D9' }"
+          :background="{ backgroundColor: state.isScroll ? '#8B5FBF' : '#8B5FBF' }"
           :title="state.title"
           :border-bottom="false"
           title-color="#fff"
