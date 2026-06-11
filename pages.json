@@ -59,21 +59,7 @@
 			}
 		},
 		{
-			"path": "pages/index/search",
-			"style": {
-				"disableScroll": true,
-				"enablePullDownRefresh": false
-			}
-		},
-		{
 			"path": "pages/my/download-history",
-			"style": {
-				"disableScroll": true,
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/index/list",
 			"style": {
 				"disableScroll": true,
 				"enablePullDownRefresh": false
