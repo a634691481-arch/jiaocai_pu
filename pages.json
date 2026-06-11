@@ -107,7 +107,8 @@
 				"disableScroll": true,
 				"enablePullDownRefresh": false
 			}
-		}
+		},
+
 	],
 	"tabBar": {
 		"custom": true,
