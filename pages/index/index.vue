@@ -115,8 +115,9 @@
   const selectedPublishers = ref([])
   const publisherNames = computed(() => selectedPublishers.value)
 
-  // ===== treeData 的顶级键即学段列表 =====
-  const sectionList = Object.keys(treeData)
+  // ===== treeData 的顶级键即学段列表，按小学→初中→高中优先排序 =====
+  const SECTION_ORDER = { '小学': 1, '小学（五•四学制）': 2, '初中': 3, '初中（五•四学制）': 4, '高中': 5 }
+  const sectionList = Object.keys(treeData).sort((a, b) => (SECTION_ORDER[a] || 99) - (SECTION_ORDER[b] || 99))
   const currentSection = ref(sectionList[0] || '')
 
   // ===== 当前学段下的科目列表 =====
