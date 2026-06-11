@@ -78,7 +78,7 @@ The VK framework (`vk-unicloud`) wraps many uni-app APIs. **Prefer VK wrappers o
 Login and token validation are managed by VK via `app.config.js`:
 
 - `checkTokenPages.mode: 2` means pages **outside** the `list` require login.
-- Whitelist (no login required): `/pages/index/*`, `/pages/login/index`, `/pages/category/*`, `/pages/textbook/*`, `/pages/my/privacy`.
+- Whitelist (no login required): `/pages/index/*`, `/pages/login/index`, `/pages/category/*`, `/pages/my/privacy`.
 - **Must use `vk.navigateTo`** for token check to work on navigation.
 - Tabbar pages that require login must manually call `vk.pubfn.checkLogin()` in `onLoad`.
 - Token key: `uni_id_token` (stored via `uni.setStorageSync`).
