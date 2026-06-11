@@ -49,48 +49,75 @@
   </yy-paging>
 </template>
 
-<script>
+<script setup>
+const paging = ref(null)
+
 const HISTORY_KEY = 'search_history'
 
-export default {
-  data() {
-    return {
-      keyword: '',
-      searched: false,
-      history: [],
-      state: { dataList: [] },
-      queryKeyword: '',
-    }
-  },
-  onLoad() {
-    this.loadHistory()
-  },
-  methods: {
-    loadHistory() {
-      try { this.history = uni.getStorageSync(HISTORY_KEY) || [] } catch (e) { this.history = [] }
-    },
-    saveHistory(kw) {
-      if (!kw) return
-      let list = this.history.filter(h => h !== kw)
-      list.unshift(kw)
-      if (list.length > 10) list.pop()
-      this.history = list
-      uni.setStorageSync(HISTORY_KEY, list)
-    },
-    clearHistory() { this.history = []; uni.removeStorageSync(HISTORY_KEY) },
-    clearSearch() { this.keyword = ''; this.searched = false; this.state.dataList = [] },
-    doSearch() {
-      const kw = this.keyword.trim()
-      if (!kw) return
-      this.queryKeyword = kw; this.searched = true; this.saveHistory(kw)
-      this.$refs.paging.reload()
-    },
-    async queryList(pageIndex, pageSize) {
-      if (!this.queryKeyword) { this.$refs.paging.complete([]); return }
-      const res = await vk.callFunction({ url: 'client/pub_index.searchTextbooks', data: { keyword: this.queryKeyword, pageIndex, pageSize } })
-      if (res.code === 1) { this.$refs.paging.complete(res.data || []) } else { this.$refs.paging.complete(false) }
-    },
-    goDetail(item) { vk.navigateTo(`/pages/category/detail?id=${item._id}`) },
-  },
+const keyword = ref('')
+const searched = ref(false)
+const history = ref([])
+const state = reactive({ dataList: [] })
+const queryKeyword = ref('')
+
+onLoad(() => {
+  loadHistory()
+})
+
+function loadHistory() {
+  try {
+    history.value = uni.getStorageSync(HISTORY_KEY) || []
+  } catch (e) {
+    history.value = []
+  }
+}
+
+function saveHistory(kw) {
+  if (!kw) return
+  let list = history.value.filter(h => h !== kw)
+  list.unshift(kw)
+  if (list.length > 10) list.pop()
+  history.value = list
+  uni.setStorageSync(HISTORY_KEY, list)
+}
+
+function clearHistory() {
+  history.value = []
+  uni.removeStorageSync(HISTORY_KEY)
+}
+
+function clearSearch() {
+  keyword.value = ''
+  searched.value = false
+  state.dataList = []
+}
+
+function doSearch() {
+  const kw = keyword.value.trim()
+  if (!kw) return
+  queryKeyword.value = kw
+  searched.value = true
+  saveHistory(kw)
+  paging.value.reload()
+}
+
+async function queryList(pageIndex, pageSize) {
+  if (!queryKeyword.value) {
+    paging.value.complete([])
+    return
+  }
+  const res = await vk.callFunction({
+    url: 'client/pub_index.searchTextbooks',
+    data: { keyword: queryKeyword.value, pageIndex, pageSize },
+  })
+  if (res.code === 1) {
+    paging.value.complete(res.data || [])
+  } else {
+    paging.value.complete(false)
+  }
+}
+
+function goDetail(item) {
+  vk.navigateTo(`/pages/category/detail?id=${item._id}`)
 }
 </script>
