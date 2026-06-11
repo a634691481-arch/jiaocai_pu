@@ -16,14 +16,6 @@
 			}
 		},
 		{
-			"path": "pages/index/category",
-			"style": {
-				"disableScroll": false,
-				"enablePullDownRefresh": false,
-				"navigationBarTitleText": "分类"
-			}
-		},
-		{
 			"path": "pages/my/index",
 			"style": {
 				"disableScroll": false,
@@ -74,21 +66,7 @@
 			}
 		},
 		{
-			"path": "pages/index/list",
-			"style": {
-				"disableScroll": true,
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/index/detail",
-			"style": {
-				"disableScroll": true,
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/index/detail",
+			"path": "pages/my/download-history",
 			"style": {
 				"disableScroll": true,
 				"enablePullDownRefresh": false
@@ -102,13 +80,12 @@
 			}
 		},
 		{
-			"path": "pages/index/category",
+			"path": "pages/index/detail",
 			"style": {
 				"disableScroll": true,
 				"enablePullDownRefresh": false
 			}
-		},
-
+		}
 	],
 	"tabBar": {
 		"custom": true,
