@@ -105,7 +105,7 @@
     hideNav: false,
     showNavBack: true,
     navTitle: '隐私与协议',
-    color: '#1B2838',
+    color: '#8B5FBF',
   })
 
   const state = ref({ isScroll: false, dataList: [] })
@@ -262,7 +262,7 @@
   flex-direction: column;
   gap: 24rpx;
   padding: 24rpx;
-  background: #F0ECE6;
+  background: #F5F3F7;
   min-height: 100vh;
 }
 
@@ -272,8 +272,8 @@
   border-radius: 28rpx;
   padding: 48rpx 36rpx 40rpx;
   overflow: hidden;
-  background: linear-gradient(145deg, #1B2838 0%, #2C3E50 50%, #1B2838 100%);
-  box-shadow: 0 8rpx 40rpx rgba(27, 40, 56, 0.25);
+  background: linear-gradient(145deg, #8B5FBF 0%, #61398F 50%, #8B5FBF 100%);
+  box-shadow: 0 8rpx 40rpx rgba(139, 95, 191, 0.25);
 }
 .hero-bg {
   position: absolute;
@@ -284,7 +284,7 @@
   position: absolute;
   border-radius: 50%;
   opacity: 0.08;
-  background: #C9A94E;
+  background: #D6C6E1;
 }
 .hero-circle-1 {
   width: 280rpx; height: 280rpx;
@@ -298,29 +298,29 @@
   width: 100rpx; height: 100rpx;
   top: 50%; right: 80rpx;
   transform: translateY(-50%);
-  background: #C0392B;
+  background: #9A73B5;
   opacity: 0.06;
 }
 .hero-icon {
   width: 80rpx;
   height: 80rpx;
   border-radius: 22rpx;
-  background: linear-gradient(135deg, #C0392B, #8B2252);
+  background: linear-gradient(135deg, #8B5FBF, #61398F);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 24rpx;
-  box-shadow: 0 4rpx 20rpx rgba(192, 57, 43, 0.3);
+  box-shadow: 0 4rpx 20rpx rgba(139, 95, 191, 0.3);
 }
 .hero-title {
   font-size: 36rpx;
   font-weight: 800;
-  color: #F5F0E8;
+  color: #FFFFFF;
   letter-spacing: 4rpx;
 }
 .hero-sub {
   font-size: 24rpx;
-  color: rgba(245, 240, 232, 0.65);
+  color: rgba(255, 255, 255, 0.65);
   margin-top: 8rpx;
 }
 .hero-date {
@@ -329,7 +329,7 @@
   gap: 8rpx;
   margin-top: 24rpx;
   font-size: 22rpx;
-  color: #BC9A6C;
+  color: #9A73B5;
 }
 
 // --- TOC ---
@@ -349,12 +349,12 @@
 .toc-ornament {
   width: 60rpx;
   height: 2rpx;
-  background: linear-gradient(90deg, transparent, #C9A94E, transparent);
+  background: linear-gradient(90deg, transparent, #D6C6E1, transparent);
 }
 .toc-title {
   font-size: 26rpx;
   font-weight: 700;
-  color: #1B2838;
+  color: #61398F;
   letter-spacing: 8rpx;
 }
 .toc-grid {
@@ -368,24 +368,24 @@
   gap: 12rpx;
   padding: 16rpx 16rpx;
   border-radius: 14rpx;
-  background: #F7F5F0;
+  background: #F5F3F7;
   transition: all 0.2s ease;
 }
 .toc-item:active {
   transform: scale(0.96);
-  background: #EDE8E0;
+  background: #E9E4ED;
 }
 .toc-num {
   font-size: 20rpx;
   font-weight: 700;
-  color: #C0392B;
+  color: #8B5FBF;
   font-feature-settings: 'tnum';
   width: 36rpx;
 }
 .toc-label {
   font-size: 24rpx;
   font-weight: 500;
-  color: #2D2D2D;
+  color: #4A4A4A;
 }
 
 // --- Content ---
@@ -410,13 +410,13 @@
 .divider-line {
   flex: 1;
   height: 1rpx;
-  background: linear-gradient(90deg, transparent, #D4C5A9, transparent);
+  background: linear-gradient(90deg, transparent, #D6C6E1, transparent);
 }
 .divider-dot {
   width: 8rpx;
   height: 8rpx;
   border-radius: 50%;
-  background: #C9A94E;
+  background: #9A73B5;
   opacity: 0.5;
 }
 
@@ -431,7 +431,7 @@
   width: 60rpx;
   height: 60rpx;
   border-radius: 14rpx;
-  background: linear-gradient(135deg, #C0392B, #8B2252);
+  background: linear-gradient(135deg, #8B5FBF, #61398F);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -452,13 +452,13 @@
 .section-title {
   font-size: 30rpx;
   font-weight: 700;
-  color: #1B2838;
+  color: #61398F;
   letter-spacing: 2rpx;
 }
 .section-short {
   display: block;
   font-size: 22rpx;
-  color: #BC9A6C;
+  color: #9A73B5;
   margin-top: 4rpx;
 }
 
@@ -487,7 +487,7 @@
   width: 10rpx;
   height: 10rpx;
   border-radius: 50%;
-  background: #C9A94E;
+  background: #9A73B5;
   flex-shrink: 0;
   margin-top: 10rpx;
 }
@@ -507,13 +507,13 @@
   margin-left: 80rpx;
   padding: 18rpx 20rpx;
   border-radius: 14rpx;
-  background: #FDFBF7;
-  border: 1rpx solid rgba(201, 169, 78, 0.2);
+  background: #F5F3F7;
+  border: 1rpx solid rgba(154, 115, 181, 0.2);
 }
 .tip-text {
   font-size: 23rpx;
   line-height: 1.6;
-  color: #8B7A5E;
+  color: #878787;
   flex: 1;
 }
 
@@ -528,16 +528,16 @@
 .footer-ornament {
   width: 160rpx;
   height: 2rpx;
-  background: linear-gradient(90deg, transparent, #C9A94E, transparent);
+  background: linear-gradient(90deg, transparent, #D6C6E1, transparent);
   margin-bottom: 12rpx;
 }
 .footer-text {
   font-size: 22rpx;
   font-weight: 500;
-  color: #8B7A5E;
+  color: #878787;
 }
 .footer-sub {
   font-size: 20rpx;
-  color: #BC9A6C;
+  color: #9A73B5;
 }
 </style>
