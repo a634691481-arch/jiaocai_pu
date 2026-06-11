@@ -27,7 +27,7 @@ export function createApp() {
   app.use(uViewPro, {
     theme: {
       themes: themes,
-      defaultTheme: 'green', // 默认主题名称
+      defaultTheme: 'violet', // 默认主题名称
       defaultDarkMode: 'light', // 默认暗黑模式：auto、light、dark
     },
   })
