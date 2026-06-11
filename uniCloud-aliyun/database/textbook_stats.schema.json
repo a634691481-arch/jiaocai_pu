@@ -1,0 +1,50 @@
+{
+  "bsonType": "object",
+  "required": ["key", "views", "downloads"],
+  "permission": {
+    "read": true,
+    "create": true,
+    "update": true,
+    "delete": false
+  },
+  "properties": {
+    "_id": {
+      "description": "ID，系统自动生成"
+    },
+    "key": {
+      "bsonType": "string",
+      "description": "唯一标识 section#subject#publisher#title",
+      "trim": "both"
+    },
+    "title": {
+      "bsonType": "string",
+      "description": "教材名称"
+    },
+    "subject": {
+      "bsonType": "string",
+      "description": "科目"
+    },
+    "publisher": {
+      "bsonType": "string",
+      "description": "出版社"
+    },
+    "section": {
+      "bsonType": "string",
+      "description": "学段"
+    },
+    "views": {
+      "bsonType": "int",
+      "description": "浏览量",
+      "defaultValue": 0
+    },
+    "downloads": {
+      "bsonType": "int",
+      "description": "下载量",
+      "defaultValue": 0
+    },
+    "updateTime": {
+      "bsonType": "timestamp",
+      "description": "最后更新时间"
+    }
+  }
+}

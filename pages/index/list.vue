@@ -21,9 +21,12 @@
           </view>
           <view class="flex-1 min-w-0">
             <text class="line-clamp-1 text-sm font-bold" style="color: #4a4a4a">{{ subject }}</text>
-            <text class="text-xs mt-0.5" style="color: #878787">
-              {{ publisher || '全部版本' }} · {{ state.dataList.length }}册
-            </text>
+            <view class="flex items-center gap-1.5 mt-0.5" @click="showPublisherPicker = true">
+              <yy-icon name="ri:arrow-down-s-line" size="24" color="#878787" />
+              <text class="text-xs" style="color: #878787">
+                {{ publisher || '全部版本' }} · {{ state.dataList.length }}册
+              </text>
+            </view>
           </view>
           <view
             class="px-3 py-1.5 rounded-full text-xs font-medium"
@@ -99,6 +102,14 @@
 
       <yy-empty v-if="!filteredList.length && loaded" />
     </view>
+
+    <!-- 出版社选择弹窗 -->
+    <yy-picker-modal
+      v-model="showPublisherPicker"
+      title="选择版本"
+      :list="publisherOptions"
+      @change="onPublisherSelect"
+    />
   </yy-paging>
 </template>
 
@@ -129,6 +140,16 @@
 
   const currentGradeFilter = ref('')
   const gradeFilters = ref(['全部年级'])
+  const showPublisherPicker = ref(false)
+  const publisherOptions = ref([])
+
+  // 从 treeData 提取当前学段+科目的可用出版社列表
+  function loadPublisherOptions() {
+    const secData = treeData[section.value]
+    if (!secData || !secData[subject.value]) { publisherOptions.value = []; return }
+    const pubs = Object.keys(secData[subject.value])
+    publisherOptions.value = ['全部版本', ...pubs]
+  }
 
   // 从 treeData 提取当前学段下当前科目+出版社的所有年级
   function loadGrades() {

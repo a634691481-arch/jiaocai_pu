@@ -2,47 +2,67 @@
   <yy-paging v-model="state.dataList" @query="queryList" ref="paging" @scroll="scroll" v-bind="pagingConfig">
     <template #top>
       <!-- 学段切换条 -->
-      <scroll-view ref="tabScrollRef" scroll-x class="whitespace-nowrap tab-scroll-view" :show-scrollbar="false"
-        :scroll-left="tabScrollLeft" scroll-with-animation style="background: #f5f3f7; padding: 12rpx 16rpx">
+      <scroll-view
+        ref="tabScrollRef"
+        scroll-x
+        class="whitespace-nowrap tab-scroll-view gap-3 p-3"
+        :show-scrollbar="false"
+        :scroll-left="tabScrollLeft"
+        scroll-with-animation
+      >
         <view class="inline-flex gap-2">
-          <view v-for="sec in sectionList" :key="sec" :id="'section-' + sec"
-            class="inline-block px-5 py-2 text-sm font-semibold transition-all duration-300 rounded-full"
-            :style="currentSection === sec ? { background: `linear-gradient(135deg, #8B5FBF, #61398F)`, color: '#FFFFFF', boxShadow: '0 4rpx 16rpx rgba(139,95,191,0.3)' } : { background: '#FFFFFF', color: '#878787', boxShadow: '0 1rpx 4rpx rgba(0,0,0,0.04)' }"
-            @click="onSectionClick(sec)">{{ sec }}</view>
-        </view>
-      </scroll-view>
-
-        <!-- 科目列表 -->
-        <view v-if="currentSubjects.length" class="flex flex-col gap-2">
           <view
-            v-for="sub in currentSubjects"
-            :key="sub.name"
-            class="flex items-center gap-3.5 rounded-2xl px-4 py-3.5 active:scale-[0.98] transition-all duration-150"
-            style="background: #ffffff; box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.03)"
-            @click="onSubjectClick(sub)"
+            v-for="sec in sectionList"
+            :key="sec"
+            :id="'section-' + sec"
+            class="inline-block px-5 py-2 text-sm font-semibold transition-all duration-300 rounded-full"
+            :style="
+              currentSection === sec
+                ? {
+                    background: `linear-gradient(135deg, #8B5FBF, #61398F)`,
+                    color: '#FFFFFF',
+                    boxShadow: '0 4rpx 16rpx rgba(139,95,191,0.3)',
+                  }
+                : { background: '#FFFFFF', color: '#878787', boxShadow: '0 1rpx 4rpx rgba(0,0,0,0.04)' }
+            "
+            @click="onSectionClick(sec)"
           >
-            <view
-              class="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center text-xl"
-              :style="{ background: sub.color + '18' }"
-            >
-              <text>{{ sub.icon }}</text>
-            </view>
-            <view class="flex-1 min-w-0">
-              <text class="line-clamp-1 text-sm font-semibold" style="color: #4a4a4a">{{ sub.name }}</text>
-              <text class="text-xs mt-0.5" style="color: #878787">{{ sub.publisherCount }}个版本</text>
-            </view>
-            <yy-icon name="ri:arrow-right-s-line" size="20" :color="th.primary" />
+            {{ sec }}
           </view>
         </view>
-        <!-- 无数据 -->
-        <view v-if="!currentSubjects.length" class="py-10 text-center">
-          <text class="text-sm" style="color: #878787">暂无科目数据</text>
-        </view>
+      </scroll-view>
     </template>
 
-    <!-- 出版社选择弹窗 -->
-    <yy-picker-modal v-model="showPublisherPicker" title="选择版本" :list="publisherNames" @change="onPublisherSelect" />
+    <!-- 科目列表 -->
+    <view v-if="currentSubjects.length" class="flex-col gap-3 p-3 pt-0">
+      <view
+        v-for="sub in currentSubjects"
+        :key="sub.name"
+        class="flex items-center gap-3.5 rounded-2xl px-4 py-3.5 active:scale-[0.98] transition-all duration-150"
+        style="background: #ffffff; box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.03)"
+        @click="onSubjectClick(sub)"
+      >
+        <view
+          class="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center text-xl"
+          :style="{ background: sub.color + '18' }"
+        >
+          <text>{{ sub.icon }}</text>
+        </view>
+        <view class="flex-1 min-w-0">
+          <text class="line-clamp-1 text-sm font-semibold" style="color: #4a4a4a">{{ sub.name }}</text>
+          <text class="text-xs mt-0.5" style="color: #878787">{{ sub.publisherCount }}个版本</text>
+        </view>
+        <yy-icon name="ri:arrow-right-s-line" size="20" :color="th.primary" />
+      </view>
+    </view>
+    <!-- 无数据 -->
+    <view v-if="!currentSubjects.length" class="py-10 text-center">
+      <text class="text-sm" style="color: #878787">暂无科目数据</text>
+    </view>
   </yy-paging>
+
+  <!-- 出版社选择弹窗 -->
+  <yy-picker-modal v-model="showPublisherPicker" title="选择版本" :list="publisherNames" @change="onPublisherSelect" />
 </template>
 
 <script setup>
