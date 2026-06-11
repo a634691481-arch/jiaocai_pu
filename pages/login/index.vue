@@ -1,76 +1,79 @@
 <template>
   <view class="bg-gray-50 relative flex flex-col min-h-screen overflow-hidden">
-    <!-- 背景渐变装饰 -->
+    <!-- 多层背景渐变装饰 -->
     <view
-      class="h-96 absolute top-0 left-0 right-0"
-      :style="{
-        background: `linear-gradient(180deg, ${uni.$u.color.primary}20 0%, transparent 100%)`,
-      }"
-    ></view>
+      class="absolute -top-16 -left-8 w-64 h-64 rounded-full blur-3xl"
+      :style="{ background: `${uni.$u.color.primary}25` }"
+    />
+    <view
+      class="absolute -top-16 -right-8 w-52 h-52 rounded-full blur-3xl"
+      :style="{ background: `${uni.$u.color.primaryLight}` }"
+    />
+    <view
+      class="absolute top-48 -right-12 w-40 h-40 rounded-full blur-3xl"
+      :style="{ background: `${uni.$u.color.primary}15` }"
+    />
 
     <!-- 内容区 -->
     <view class="relative z-10 flex flex-col flex-1 p-6 pt-16">
       <!-- 品牌 Logo -->
-      <view class="flex flex-col items-center gap-4 my-8">
-        <view
-          class="rounded-3xl size-24 flex items-center justify-center shadow-lg"
-          :style="{ backgroundColor: uni.$u.color.primary }"
-        >
-          <yy-icon name="ri:book-3-line" size="48" color="#ffffff" />
+      <view class="flex flex-col items-center gap-4 mt-8 mb-6">
+        <view class="relative">
+          <!-- 装饰环 -->
+          <view
+            class="absolute -inset-3 rounded-full opacity-20"
+            :style="{ background: `conic-gradient(from 180deg, ${uni.$u.color.primary}, transparent, ${uni.$u.color.primaryDark}, transparent)` }"
+          />
+          <view
+            class="relative rounded-3xl size-24 flex items-center justify-center shadow-xl"
+            :style="{
+              backgroundColor: uni.$u.color.primary,
+              boxShadow: `0 8rpx 32rpx ${uni.$u.color.primary}4d`,
+            }"
+          >
+            <yy-icon name="ri:book-3-line" size="48" color="#ffffff" />
+          </view>
         </view>
-        <view class="flex flex-col items-center gap-2">
-          <view class="text-2xl font-bold text-gray-900">教材宝</view>
-          <view class="text-sm text-gray-500">精选教材，免费下载</view>
+        <view class="flex flex-col items-center gap-1.5">
+          <view class="text-3xl font-extrabold" style="color: #1f2937">教材宝</view>
+          <view class="text-sm" style="color: #94a3b8">精选教材，免费下载</view>
         </view>
       </view>
 
       <!-- 功能介绍 -->
-      <view class="flex flex-col gap-4 mt-4">
-        <view class="rounded-2xl flex items-center gap-4 p-4 bg-white shadow-sm">
+      <view class="flex flex-col gap-3.5">
+        <view
+          class="rounded-2xl flex items-center gap-4 p-4 overflow-hidden"
+          style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04)"
+          v-for="(item, idx) in featureList"
+          :key="idx"
+        >
           <view
-            class="size-12 rounded-xl shrink-0 flex items-center justify-center"
-            :style="{ backgroundColor: `${uni.$u.color.primary}15` }"
-          >
-            <yy-icon name="ri:file-text-line" size="24" :color="uni.$u.color.primary" />
-          </view>
-          <view class="flex flex-col gap-1">
-            <view class="text-sm font-semibold text-gray-800">海量资源</view>
-            <view class="text-xs text-gray-500">覆盖小学到初中全部年级科目</view>
-          </view>
-        </view>
-
-        <view class="rounded-2xl flex items-center gap-4 p-4 bg-white shadow-sm">
+            class="w-1 h-10 rounded-full shrink-0"
+            :style="{ background: `linear-gradient(180deg, ${uni.$u.color.primary}, ${uni.$u.color.primaryDark})` }"
+          />
           <view
-            class="size-12 rounded-xl shrink-0 flex items-center justify-center"
-            :style="{ backgroundColor: `${uni.$u.color.primary}15` }"
+            class="size-11 rounded-xl shrink-0 flex items-center justify-center"
+            :style="{ backgroundColor: `${uni.$u.color.primary}10` }"
           >
-            <yy-icon name="ri:download-2-line" size="24" :color="uni.$u.color.primary" />
+            <yy-icon :name="item.icon" size="22" :color="uni.$u.color.primary" />
           </view>
-          <view class="flex flex-col gap-1">
-            <view class="text-sm font-semibold text-gray-800">免费下载</view>
-            <view class="text-xs text-gray-500">观看广告后即可免费下载PDF教材</view>
-          </view>
-        </view>
-
-        <view class="rounded-2xl flex items-center gap-4 p-4 bg-white shadow-sm">
-          <view
-            class="size-12 rounded-xl shrink-0 flex items-center justify-center"
-            :style="{ backgroundColor: `${uni.$u.color.primary}15` }"
-          >
-            <yy-icon name="ri:history-line" size="24" :color="uni.$u.color.primary" />
-          </view>
-          <view class="flex flex-col gap-1">
-            <view class="text-sm font-semibold text-gray-800">下载记录</view>
-            <view class="text-xs text-gray-500">登录后可查看和管理下载历史</view>
+          <view class="flex flex-col gap-0.5 flex-1 min-w-0">
+            <view class="text-sm font-semibold" style="color: #1f2937">{{ item.title }}</view>
+            <view class="text-xs" style="color: #94a3b8">{{ item.desc }}</view>
           </view>
         </view>
       </view>
 
       <!-- 隐私协议入口 -->
-      <view class="flex justify-center mt-4">
-        <text class="text-xs text-gray-400">
+      <view class="flex justify-center mt-5">
+        <text class="text-xs" style="color: #cbd5e1">
           登录即代表同意
-          <text class="underline" :style="{ color: uni.$u.color.primary }" @click="toPrivacy">《隐私与协议》</text>
+          <text
+            class="underline font-medium"
+            :style="{ color: uni.$u.color.primary }"
+            @click="toPrivacy"
+          >《隐私与协议》</text>
         </text>
       </view>
     </view>
@@ -87,6 +90,12 @@
 </template>
 
 <script setup>
+  const featureList = [
+    { icon: 'ri:file-text-line', title: '海量资源', desc: '覆盖小学到初中全部年级科目' },
+    { icon: 'ri:download-2-line', title: '免费下载', desc: '观看广告后即可免费下载PDF教材' },
+    { icon: 'ri:history-line', title: '下载记录', desc: '登录后可查看和管理下载历史' },
+  ]
+
   const loginLoading = ref(false)
   const loginLoadingText = ref('立即登录')
 

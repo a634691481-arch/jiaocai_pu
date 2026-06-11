@@ -71,6 +71,14 @@
 				"disableScroll": true,
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/index/list",
+			"style": {
+				"disableScroll": false,
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "教材列表"
+			}
 		}
 	],
 	"tabBar": {
