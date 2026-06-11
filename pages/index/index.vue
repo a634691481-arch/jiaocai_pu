@@ -7,15 +7,18 @@
         style="height: 88rpx"
         @click="goSearch"
       >
-        <view class="absolute inset-0 opacity-8" :style="{ backgroundColor: th.primary }" />
-        <view class="w-8 h-8 rounded-full flex items-center justify-center relative z-10" :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }">
+        <view class="opacity-8 absolute inset-0" :style="{ backgroundColor: th.primary }" />
+        <view
+          class="relative z-10 flex items-center justify-center w-8 h-8 rounded-full"
+          :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }"
+        >
           <yy-icon name="ri:search-line" size="16" color="#ffffff" />
         </view>
-        <text class="ml-3 text-sm flex-1 relative z-10" style="color: #9CA3AF">搜索教材名称或年级</text>
+        <text class="relative z-10 flex-1 ml-3 text-sm" style="color: #9ca3af">搜索教材名称或年级</text>
       </view>
 
       <!-- Banner -->
-      <view v-if="banners.length" class="relative rounded-2xl overflow-hidden" style="height: 300rpx">
+      <view v-if="banners.length" class="rounded-2xl relative overflow-hidden" style="height: 300rpx">
         <swiper
           class="w-full h-full"
           :autoplay="true"
@@ -27,7 +30,10 @@
         >
           <swiper-item v-for="b in banners" :key="b._id" @click="onBannerTap(b)">
             <image :src="b.imageUrl" mode="aspectFill" class="w-full h-full" />
-            <view class="absolute inset-0" style="background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.35) 100%)" />
+            <view
+              class="absolute inset-0"
+              style="background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.35) 100%)"
+            />
           </swiper-item>
         </swiper>
       </view>
@@ -38,12 +44,15 @@
           class="flex-1 rounded-2xl p-4 flex items-center gap-3 active:scale-[0.97] transition-transform duration-200 relative overflow-hidden"
           @click="switchTab(1)"
         >
-          <view class="absolute inset-0 opacity-8" :style="{ backgroundColor: th.primary }" />
-          <view class="w-10 h-10 rounded-xl flex items-center justify-center relative z-10" :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }">
+          <view class="opacity-8 absolute inset-0" :style="{ backgroundColor: th.primary }" />
+          <view
+            class="rounded-xl relative z-10 flex items-center justify-center w-10 h-10"
+            :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }"
+          >
             <yy-icon name="ri:grid-fill" size="20" color="#ffffff" />
           </view>
           <view class="relative z-10">
-            <text class="text-sm font-semibold block" :style="{ color: th.primaryDark }">浏览教材</text>
+            <text class="block text-sm font-semibold" :style="{ color: th.primaryDark }">浏览教材</text>
             <text class="text-xs" :style="{ color: th.primary }">按年级科目查找</text>
           </view>
         </view>
@@ -51,12 +60,15 @@
           class="flex-1 rounded-2xl p-4 flex items-center gap-3 active:scale-[0.97] transition-transform duration-200 relative overflow-hidden"
           @click="goSearch"
         >
-          <view class="absolute inset-0 opacity-8" :style="{ backgroundColor: th.primary }" />
-          <view class="w-10 h-10 rounded-xl flex items-center justify-center relative z-10" :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }">
+          <view class="opacity-8 absolute inset-0" :style="{ backgroundColor: th.primary }" />
+          <view
+            class="rounded-xl relative z-10 flex items-center justify-center w-10 h-10"
+            :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }"
+          >
             <yy-icon name="ri:file-search-line" size="20" color="#ffffff" />
           </view>
           <view class="relative z-10">
-            <text class="text-sm font-semibold block" :style="{ color: th.primaryDark }">搜索教材</text>
+            <text class="block text-sm font-semibold" :style="{ color: th.primaryDark }">搜索教材</text>
             <text class="text-xs" :style="{ color: th.primary }">精准查找资源</text>
           </view>
         </view>
@@ -64,8 +76,11 @@
 
       <!-- 热门推荐 -->
       <view class="flex items-center gap-2">
-        <view class="w-1 h-5 rounded-full" :style="{ background: `linear-gradient(180deg, ${th.primary}, ${th.primaryDark})` }" />
-        <text class="text-lg font-bold" style="color: #1F2937">🔥 热门推荐</text>
+        <view
+          class="w-1 h-5 rounded-full"
+          :style="{ background: `linear-gradient(180deg, ${th.primary}, ${th.primaryDark})` }"
+        />
+        <text class="text-lg font-bold" style="color: #1f2937">🔥 热门推荐</text>
         <view class="flex-1" />
         <text class="text-xs font-medium" :style="{ color: th.primary }" @click="switchTab(1)">查看全部 →</text>
       </view>
@@ -75,19 +90,27 @@
           v-for="item in state.dataList"
           :key="item._id"
           class="rounded-2xl overflow-hidden active:scale-[0.96] transition-all duration-250"
-          style="background: #FFFFFF; box-shadow: 0 2rpx 16rpx rgba(0,0,0,0.04)"
+          style="background: #ffffff; box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.04)"
           @click="goDetail(item)"
         >
           <view class="relative" style="aspect-ratio: 3/4">
-            <image :src="item.cover" mode="aspectFill" class="w-full h-full" :style="{ backgroundColor: th.primaryLight }" />
-            <view class="absolute inset-0" style="background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.15) 100%)" />
-            <view class="absolute bottom-2 left-2 right-2">
-              <text class="text-white text-xs font-medium drop-shadow">{{ item.publisher || '' }}</text>
+            <image
+              :src="item.cover"
+              mode="aspectFill"
+              class="w-full h-full"
+              :style="{ backgroundColor: th.primaryLight }"
+            />
+            <view
+              class="absolute inset-0"
+              style="background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.15) 100%)"
+            />
+            <view class="bottom-2 left-2 right-2 absolute">
+              <text class="drop-shadow text-xs font-medium text-white">{{ item.publisher || '' }}</text>
             </view>
           </view>
           <view class="p-3">
-            <text class="text-sm font-semibold line-clamp-1" style="color: #1F2937">{{ item.title }}</text>
-            <text class="text-xs mt-1" style="color: #9CA3AF">{{ formatSize(item.fileSize) }}</text>
+            <text class="line-clamp-1 text-sm font-semibold" style="color: #1f2937">{{ item.title }}</text>
+            <text class="mt-1 text-xs" style="color: #9ca3af">{{ formatSize(item.fileSize) }}</text>
           </view>
         </view>
       </view>
@@ -100,8 +123,8 @@
 
   const pagingConfig = ref({
     auto: false,
-    refresherEnabled: true,
-    showRefresherWhenReload: true,
+    refresherEnabled: false,
+    showRefresherWhenReload: false,
     showTabbar: true,
     hideNav: false,
     showNavBack: false,
@@ -113,10 +136,14 @@
   const paging = ref()
   const banners = ref([])
 
-  onLoad(() => { loadBanners() })
+  onLoad(() => {
+    loadBanners()
+  })
   onShow(() => {})
 
-  function scroll(e) { state.value.isScroll = e.detail.scrollTop > 0 }
+  function scroll(e) {
+    state.value.isScroll = e.detail.scrollTop > 0
+  }
 
   async function loadBanners() {
     const res = await vk.callFunction({ url: 'client/pub_index.getBanners' })
@@ -135,8 +162,12 @@
     }
   }
 
-  function goDetail(item) { vk.navigateTo(`/pages/category/detail?id=${item._id}`) }
-  function goSearch() { vk.navigateTo('/pages/index/search') }
+  function goDetail(item) {
+    vk.navigateTo(`/pages/category/detail?id=${item._id}`)
+  }
+  function goSearch() {
+    vk.navigateTo('/pages/index/search')
+  }
   function switchTab(index) {
     vk.vuex.set('$tabbar.activeIndex', index)
     vk.switchTab('/pages/category/index')
