@@ -45,7 +45,9 @@
   </yy-paging>
 </template>
 
-<script>
+<script setup>
+const paging = ref(null)
+
 const SUBJECT_CONFIG = {
   chinese: { label: '语文', icon: '📚', color: '#EF4444', bg: '#FEE2E2' },
   math: { label: '数学', icon: '📐', color: '#3B82F6', bg: '#DBEAFE' },
@@ -66,40 +68,36 @@ const ALL_GRADES = [
   { key: 'grade9', label: '九年级' },
 ]
 
-export default {
-  data() {
-    return {
-      sections: [
-        { key: 'primary', label: '小学' },
-        { key: 'junior', label: '初中' },
-      ],
-      currentSection: 'primary',
-      currentGrade: 'grade1',
-    }
-  },
-  computed: {
-    currentGrades() {
-      if (this.currentSection === 'primary') return ALL_GRADES.slice(0, 6)
-      return ALL_GRADES.slice(6)
-    },
-    currentSubjects() {
-      const keys = this.currentSection === 'primary'
-        ? ['chinese', 'math', 'english']
-        : ['chinese', 'math', 'english', 'physics', 'chemistry', 'biology', 'politics', 'history', 'geography']
-      return keys.map(k => ({ key: k, ...SUBJECT_CONFIG[k] }))
-    },
-  },
-  methods: {
-    switchSection(key) {
-      this.currentSection = key
-      this.currentGrade = key === 'primary' ? 'grade1' : 'grade7'
-    },
-    goToList(subject) {
-      vk.navigateTo(`/pages/category/list?grade=${this.currentGrade}&subject=${subject.key}&title=${encodeURIComponent(this.currentGrade.replace('grade','')+'年级·'+subject.label)}`)
-    },
-    queryList() {
-      this.$refs.paging.complete([])
-    },
-  },
+const sections = [
+  { key: 'primary', label: '小学' },
+  { key: 'junior', label: '初中' },
+]
+
+const currentSection = ref('primary')
+const currentGrade = ref('grade1')
+
+const currentGrades = computed(() => {
+  if (currentSection.value === 'primary') return ALL_GRADES.slice(0, 6)
+  return ALL_GRADES.slice(6)
+})
+
+const currentSubjects = computed(() => {
+  const keys = currentSection.value === 'primary'
+    ? ['chinese', 'math', 'english']
+    : ['chinese', 'math', 'english', 'physics', 'chemistry', 'biology', 'politics', 'history', 'geography']
+  return keys.map(k => ({ key: k, ...SUBJECT_CONFIG[k] }))
+})
+
+function switchSection(key) {
+  currentSection.value = key
+  currentGrade.value = key === 'primary' ? 'grade1' : 'grade7'
+}
+
+function goToList(subject) {
+  vk.navigateTo(`/pages/category/list?grade=${currentGrade.value}&subject=${subject.key}&title=${encodeURIComponent(currentGrade.value.replace('grade','')+'年级·'+subject.label)}`)
+}
+
+function queryList() {
+  paging.value.complete([])
 }
 </script>
