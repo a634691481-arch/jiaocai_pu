@@ -24,7 +24,7 @@
 
       <!-- 内容区 -->
       <view class="flex flex-col gap-4 px-4 pt-4 pb-6">
-        <!-- 年级切换条 -->
+        <!-- 年级切换条（固定顶部） -->
         <scroll-view
           ref="tabScrollRef"
           scroll-x
@@ -32,6 +32,7 @@
           :show-scrollbar="false"
           :scroll-left="tabScrollLeft"
           scroll-with-animation
+          style="position: sticky; top: 0; z-index: 10; background: #f5f3f7; padding: 12rpx 0"
         >
           <view class="inline-flex gap-2">
             <view
