@@ -16,11 +16,11 @@
           class="rounded-3xl size-24 flex items-center justify-center shadow-lg"
           :style="{ backgroundColor: uni.$u.color.primary }"
         >
-          <yy-icon name="ri:car-line" size="48" color="#ffffff" />
+          <yy-icon name="ri:book-3-line" size="48" color="#ffffff" />
         </view>
         <view class="flex flex-col items-center gap-2">
           <view class="text-2xl font-bold text-gray-900">教材宝</view>
-          <view class="text-sm text-gray-500">学习资料管理平台</view>
+          <view class="text-sm text-gray-500">精选教材，免费下载</view>
         </view>
       </view>
 
@@ -31,11 +31,11 @@
             class="size-12 rounded-xl shrink-0 flex items-center justify-center"
             :style="{ backgroundColor: `${uni.$u.color.primary}15` }"
           >
-            <yy-icon name="ri:qr-scan-2-line" size="24" :color="uni.$u.color.primary" />
+            <yy-icon name="ri:file-text-line" size="24" :color="uni.$u.color.primary" />
           </view>
           <view class="flex flex-col gap-1">
-            <view class="text-sm font-semibold text-gray-800">扫码通知</view>
-            <view class="text-xs text-gray-500">扫描二维码即可快速联系车主挪车</view>
+            <view class="text-sm font-semibold text-gray-800">海量资源</view>
+            <view class="text-xs text-gray-500">覆盖小学到初中全部年级科目</view>
           </view>
         </view>
 
@@ -44,11 +44,11 @@
             class="size-12 rounded-xl shrink-0 flex items-center justify-center"
             :style="{ backgroundColor: `${uni.$u.color.primary}15` }"
           >
-            <yy-icon name="ri:shield-check-line" size="24" :color="uni.$u.color.primary" />
+            <yy-icon name="ri:download-2-line" size="24" :color="uni.$u.color.primary" />
           </view>
           <view class="flex flex-col gap-1">
-            <view class="text-sm font-semibold text-gray-800">隐私保护</view>
-            <view class="text-xs text-gray-500">虚拟号码中转，保护双方真实手机号</view>
+            <view class="text-sm font-semibold text-gray-800">免费下载</view>
+            <view class="text-xs text-gray-500">观看广告后即可免费下载PDF教材</view>
           </view>
         </view>
 
@@ -57,11 +57,11 @@
             class="size-12 rounded-xl shrink-0 flex items-center justify-center"
             :style="{ backgroundColor: `${uni.$u.color.primary}15` }"
           >
-            <yy-icon name="ri:notification-3-line" size="24" :color="uni.$u.color.primary" />
+            <yy-icon name="ri:history-line" size="24" :color="uni.$u.color.primary" />
           </view>
           <view class="flex flex-col gap-1">
-            <view class="text-sm font-semibold text-gray-800">消息推送</view>
-            <view class="text-xs text-gray-500">微信实时提醒，不错过任何挪车请求</view>
+            <view class="text-sm font-semibold text-gray-800">下载记录</view>
+            <view class="text-xs text-gray-500">登录后可查看和管理下载历史</view>
           </view>
         </view>
       </view>
@@ -102,7 +102,7 @@
 
   // 跳转到隐私协议页面
   function toPrivacy() {
-    vk.navigateTo('/pages/privacy/index')
+    vk.navigateTo('/pages/my/privacy')
   }
 
   // 执行登录
