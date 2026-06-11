@@ -11,10 +11,6 @@
             @click="onSectionClick(sec)">{{ sec }}</view>
         </view>
       </scroll-view>
-    </template>
-
-    <!-- 内容区 -->
-    <view class="flex flex-col gap-4 p-4" style="background-color: #f5f3f7">
 
         <!-- 科目列表 -->
         <view v-if="currentSubjects.length" class="flex flex-col gap-2">
@@ -38,13 +34,11 @@
             <yy-icon name="ri:arrow-right-s-line" size="20" :color="th.primary" />
           </view>
         </view>
-
         <!-- 无数据 -->
         <view v-if="!currentSubjects.length" class="py-10 text-center">
           <text class="text-sm" style="color: #878787">暂无科目数据</text>
         </view>
-      </view>
-    </view>
+    </template>
 
     <!-- 出版社选择弹窗 -->
     <yy-picker-modal v-model="showPublisherPicker" title="选择版本" :list="publisherNames" @change="onPublisherSelect" />
