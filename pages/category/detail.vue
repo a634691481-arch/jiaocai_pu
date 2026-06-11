@@ -35,7 +35,9 @@
   </yy-paging>
 </template>
 
-<script>
+<script setup>
+const paging = ref(null)
+
 const DOWNLOAD_STATES = {
   idle: { key: 'idle', text: '📥 下载教材', bg: '#10B981' },
   loading: { key: 'loading', text: '正在获取下载链接...', bg: '#9CA3AF' },
@@ -44,54 +46,147 @@ const DOWNLOAD_STATES = {
   error: { key: 'error', text: '❌ 下载失败，点击重试', bg: '#EF4444' },
 }
 
-export default {
-  data() { return { info: null, related: [], downloadState: DOWNLOAD_STATES.idle, downloadProgress: 0, rewardedVideoAd: null } },
-  onLoad(options) { this.loadDetail(options.id); this.createRewardedVideoAd() },
-  onUnload() { if (this.rewardedVideoAd) this.rewardedVideoAd.destroy() },
-  methods: {
-    async loadDetail(id) {
-      const res = await vk.callFunction({ url: 'client/pub_index.getTextbookDetail', data: { id } })
-      if (res.code === 1) { this.info = res.data; this.loadRelated(); vk.callFunction({ url: 'client/pub_index.incrementViewCount', data: { id, type: 'view' } }) }
-      else vk.toast(res.msg || '加载失败')
+const info = ref(null)
+const related = ref([])
+const downloadState = ref(DOWNLOAD_STATES.idle)
+const downloadProgress = ref(0)
+const rewardedVideoAd = ref(null)
+
+onLoad((options) => {
+  loadDetail(options.id)
+  createRewardedVideoAd()
+})
+
+onUnload(() => {
+  if (rewardedVideoAd.value) {
+    rewardedVideoAd.value.destroy()
+  }
+})
+
+async function loadDetail(id) {
+  const res = await vk.callFunction({
+    url: 'client/pub_index.getTextbookDetail',
+    data: { id },
+  })
+  if (res.code === 1) {
+    info.value = res.data
+    loadRelated()
+    vk.callFunction({
+      url: 'client/pub_index.incrementViewCount',
+      data: { id, type: 'view' },
+    })
+  } else {
+    vk.toast(res.msg || '加载失败')
+  }
+}
+
+async function loadRelated() {
+  const res = await vk.callFunction({
+    url: 'client/pub_index.getTextbookList',
+    data: {
+      grade: info.value.grade,
+      subject: info.value.subject,
+      pageIndex: 1,
+      pageSize: 6,
     },
-    async loadRelated() {
-      const res = await vk.callFunction({ url: 'client/pub_index.getTextbookList', data: { grade: this.info.grade, subject: this.info.subject, pageIndex: 1, pageSize: 6 } })
-      if (res.code === 1) this.related = (res.data || []).filter(i => i._id !== this.info._id)
-    },
-    createRewardedVideoAd() {
-      // #ifdef MP-WEIXIN
-      if (wx.createRewardedVideoAd) {
-        this.rewardedVideoAd = wx.createRewardedVideoAd({ adUnitId: '' })
-        this.rewardedVideoAd.onClose((res) => { if (res && res.isEnded) this.doDownload(); else vk.toast('观看完整广告才能下载哦~') })
-        this.rewardedVideoAd.onError(() => { vk.toast('广告加载失败，请稍后重试'); this.downloadState = DOWNLOAD_STATES.idle })
+  })
+  if (res.code === 1) {
+    related.value = (res.data || []).filter(i => i._id !== info.value._id)
+  }
+}
+
+function createRewardedVideoAd() {
+  // #ifdef MP-WEIXIN
+  if (wx.createRewardedVideoAd) {
+    rewardedVideoAd.value = wx.createRewardedVideoAd({ adUnitId: '' })
+    rewardedVideoAd.value.onClose((res) => {
+      if (res && res.isEnded) {
+        doDownload()
+      } else {
+        vk.toast('观看完整广告才能下载哦~')
       }
-      // #endif
+    })
+    rewardedVideoAd.value.onError(() => {
+      vk.toast('广告加载失败，请稍后重试')
+      downloadState.value = DOWNLOAD_STATES.idle
+    })
+  }
+  // #endif
+}
+
+function handleDownload() {
+  if (
+    downloadState.value.key === 'downloading' ||
+    downloadState.value.key === 'loading' ||
+    downloadState.value.key === 'success'
+  ) return
+
+  if (downloadState.value.key === 'error') {
+    downloadState.value = DOWNLOAD_STATES.idle
+    return
+  }
+
+  if (!vk.pubfn.checkLogin()) {
+    vk.navigateTo('/pages/login/index')
+    return
+  }
+
+  // #ifdef MP-WEIXIN
+  if (rewardedVideoAd.value) {
+    rewardedVideoAd.value
+      .show()
+      .catch(() =>
+        rewardedVideoAd.value.load().then(() => rewardedVideoAd.value.show()),
+      )
+    return
+  }
+  // #endif
+
+  doDownload()
+}
+
+async function doDownload() {
+  downloadState.value = DOWNLOAD_STATES.loading
+  const res = await vk.callFunction({
+    url: 'client/pub_index.getDownloadUrl',
+    data: { id: info.value._id },
+  })
+  if (res.code !== 1) {
+    vk.toast(res.msg || '获取失败')
+    downloadState.value = DOWNLOAD_STATES.error
+    return
+  }
+  downloadFile(res.data.fileUrl)
+}
+
+function downloadFile(url) {
+  downloadState.value = DOWNLOAD_STATES.downloading
+  const dt = uni.downloadFile({
+    url,
+    success: (res) => {
+      if (res.statusCode === 200) {
+        downloadState.value = DOWNLOAD_STATES.success
+        uni.openDocument({ filePath: res.tempFilePath, showMenu: true })
+      } else {
+        downloadState.value = DOWNLOAD_STATES.error
+      }
     },
-    handleDownload() {
-      if (this.downloadState.key === 'downloading' || this.downloadState.key === 'loading' || this.downloadState.key === 'success') return
-      if (this.downloadState.key === 'error') { this.downloadState = DOWNLOAD_STATES.idle; return }
-      if (!vk.pubfn.checkLogin()) { vk.navigateTo('/pages/login/index'); return }
-      // #ifdef MP-WEIXIN
-      if (this.rewardedVideoAd) { this.rewardedVideoAd.show().catch(() => this.rewardedVideoAd.load().then(() => this.rewardedVideoAd.show())); return }
-      // #endif
-      this.doDownload()
+    fail: () => {
+      downloadState.value = DOWNLOAD_STATES.error
     },
-    async doDownload() {
-      this.downloadState = DOWNLOAD_STATES.loading
-      const res = await vk.callFunction({ url: 'client/pub_index.getDownloadUrl', data: { id: this.info._id } })
-      if (res.code !== 1) { vk.toast(res.msg || '获取失败'); this.downloadState = DOWNLOAD_STATES.error; return }
-      this.downloadFile(res.data.fileUrl)
-    },
-    downloadFile(url) {
-      this.downloadState = DOWNLOAD_STATES.downloading
-      const dt = uni.downloadFile({
-        url, success: (res) => { if (res.statusCode === 200) { this.downloadState = DOWNLOAD_STATES.success; uni.openDocument({ filePath: res.tempFilePath, showMenu: true }) } else this.downloadState = DOWNLOAD_STATES.error },
-        fail: () => { this.downloadState = DOWNLOAD_STATES.error }
-      })
-      dt.onProgressUpdate((res) => { this.downloadProgress = res.progress })
-    },
-    formatFileSize(bytes) { if (!bytes) return '未知大小'; return bytes < 1024*1024 ? (bytes/1024).toFixed(1)+'KB' : (bytes/(1024*1024)).toFixed(1)+'MB' },
-    goDetail(id) { vk.redirectTo(`/pages/category/detail?id=${id}`) },
-  },
+  })
+  dt.onProgressUpdate((res) => {
+    downloadProgress.value = res.progress
+  })
+}
+
+function formatFileSize(bytes) {
+  if (!bytes) return '未知大小'
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + 'KB'
+  return (bytes / (1024 * 1024)).toFixed(1) + 'MB'
+}
+
+function goDetail(id) {
+  vk.redirectTo(`/pages/category/detail?id=${id}`)
 }
 </script>
