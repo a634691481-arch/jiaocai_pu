@@ -96,6 +96,8 @@
 </template>
 
 <script setup>
+  import treeData from '@/static/textbook-tree.json'
+
   const th = uni.$u.color
 
   const pagingConfig = ref({
@@ -118,14 +120,59 @@
   const selectedPublishers = ref([])
   const publisherNames = computed(() => selectedPublishers.value)
 
-  // 年级列表 + 当前年级
-  const gradeList = ref([])
-  const currentGrade = ref('')
+  // ===== 从 treeData 提取年级列表 =====
+  const allGrades = (() => {
+    const seen = new Set()
+    Object.values(treeData).forEach(section => {
+      Object.values(section).forEach(subject => {
+        Object.values(subject).forEach(grades => {
+          grades.forEach(g => seen.add(g))
+        })
+      })
+    })
+    // 按 GRADE_PRIORITY 排序
+    const order = {
+      '小学低年级':1,'小学高年级':2,'全一册':10,'上册':11,'下册':12,
+      '一年级':20,'二年级':30,'三年级':40,'四年级':50,'五年级':60,'六年级':70,
+      '七年级':80,'八年级':90,'九年级':100,
+      '必修':201,'必修第一册':211,'必修第二册':212,'必修第三册':213,'必修第四册':214,
+      '选择性必修第一册':241,'选择性必修第二册':242,'选择性必修第三册':243,
+    }
+    return [...seen].sort((a, b) => (order[a] || 999) - (order[b] || 999))
+  })()
+
+  const gradeList = ref(allGrades.map(name => ({ name })))
+  const currentGrade = ref(allGrades.length > 0 ? allGrades[0] : '')
   const loadingGrade = ref(false)
 
-  // 当前年级下的科目列表
-  const currentSubjects = ref([])
+  // ===== 当前年级的科目列表 =====
+  const currentSubjects = computed(() => {
+    const g = currentGrade.value
+    if (!g) return []
+    const subjectMap = {}
+    Object.entries(treeData).forEach(([section, subjects]) => {
+      Object.entries(subjects).forEach(([subject, publishers]) => {
+        Object.entries(publishers).forEach(([publisher, grades]) => {
+          if (grades.includes(g)) {
+            if (!subjectMap[subject]) subjectMap[subject] = { publishers: [], publisherCount: 0 }
+            if (!subjectMap[subject].publishers.includes(publisher)) {
+              subjectMap[subject].publishers.push(publisher)
+              subjectMap[subject].publisherCount++
+            }
+          }
+        })
+      })
+    })
+    return Object.entries(subjectMap).map(([name, info]) => ({
+      name,
+      icon: getSubjectIcon(name),
+      color: getSubjectColor(name),
+      publisherCount: info.publisherCount,
+      publishers: info.publishers,
+    }))
+  })
 
+  // ===== 年级切换自动居中 =====
   watch(currentGrade, () => {
     nextTick(() => {
       const query = uni.createSelectorQuery().in(tabScrollRef.value)
@@ -149,26 +196,6 @@
 
   function onGradeClick(name) {
     currentGrade.value = name
-    loadSubjectsByGrade(name)
-  }
-
-  async function loadSubjectsByGrade(name) {
-    loadingGrade.value = true
-    currentSubjects.value = []
-    const res = await vk.callFunction({
-      url: 'client/pub.index.getSubjectByGrade',
-      data: { name },
-    })
-    if (res.code === 1 && res.data) {
-      currentSubjects.value = Object.entries(res.data).map(([name, info]) => ({
-        name,
-        icon: getSubjectIcon(name),
-        color: getSubjectColor(name),
-        publisherCount: info.publisherCount,
-        publishers: info.publishers,
-      }))
-    }
-    loadingGrade.value = false
   }
 
   function onSubjectClick(subject) {
@@ -203,67 +230,26 @@
   // --- 科目显示配置 ---
   function getSubjectIcon(name) {
     const map = {
-      语文: '📖',
-      数学: '📐',
-      英语: '🌍',
-      物理: '⚡',
-      化学: '🧪',
-      生物学: '🌿',
-      生物: '🌿',
-      历史: '📜',
-      地理: '🗺️',
-      道德与法治: '⚖️',
-      政治: '⚖️',
-      思想政治: '⚖️',
-      科学: '🔬',
-      体育与健康: '🏃',
-      音乐: '🎵',
-      美术: '🎨',
-      艺术: '🎭',
-      '语文·书法练习指导': '✍️',
-      日语: '🗾',
-      俄语: '🇷🇺',
-      人文地理: '🌏',
-      地理图册: '🗺️',
-      通用技术: '🔧',
-      信息技术: '💻',
-      高等数学: '∫',
-      线性代数: '∑',
-      概率论与数理统计: '📊',
-      离散数学: '🔢',
+      语文:'📖',数学:'📐',英语:'🌍',物理:'⚡',化学:'🧪',生物学:'🌿',生物:'🌿',
+      历史:'📜',地理:'🗺️',道德与法治:'⚖️',政治:'⚖️',思想政治:'⚖️',
+      科学:'🔬',体育与健康:'🏃',音乐:'🎵',美术:'🎨',艺术:'🎭',
+      '语文·书法练习指导':'✍️',日语:'🗾',俄语:'🇷🇺',人文地理:'🌏',
+      地理图册:'🗺️',通用技术:'🔧',信息技术:'💻',高等数学:'∫',
+      线性代数:'∑',概率论与数理统计:'📊',离散数学:'🔢',
     }
     return map[name] || '📚'
   }
 
   function getSubjectColor(name) {
     const map = {
-      语文: '#DC2626',
-      数学: '#2563EB',
-      英语: '#7C3AED',
-      物理: '#D97706',
-      化学: '#059669',
-      生物学: '#16A34A',
-      生物: '#16A34A',
-      历史: '#B45309',
-      地理: '#0891B2',
-      道德与法治: '#DB2777',
-      思想政治: '#DB2777',
-      科学: '#0D9488',
-      体育与健康: '#EA580C',
-      音乐: '#9333EA',
-      美术: '#C026D3',
-      艺术: '#E11D48',
-      '语文·书法练习指导': '#92400E',
-      日语: '#BE185D',
-      俄语: '#1D4ED8',
-      人文地理: '#0E7490',
-      地理图册: '#0369A1',
-      通用技术: '#4F46E5',
-      信息技术: '#2563EB',
-      高等数学: '#1E40AF',
-      线性代数: '#3730A3',
-      概率论与数理统计: '#5B21B6',
-      离散数学: '#312E81',
+      语文:'#DC2626',数学:'#2563EB',英语:'#7C3AED',物理:'#D97706',
+      化学:'#059669',生物学:'#16A34A',生物:'#16A34A',历史:'#B45309',
+      地理:'#0891B2',道德与法治:'#DB2777',思想政治:'#DB2777',
+      科学:'#0D9488',体育与健康:'#EA580C',音乐:'#9333EA',美术:'#C026D3',
+      艺术:'#E11D48','语文·书法练习指导':'#92400E',日语:'#BE185D',
+      俄语:'#1D4ED8',人文地理:'#0E7490',地理图册:'#0369A1',
+      通用技术:'#4F46E5',信息技术:'#2563EB',高等数学:'#1E40AF',
+      线性代数:'#3730A3',概率论与数理统计:'#5B21B6',离散数学:'#312E81',
     }
     return map[name] || '#6B7280'
   }
@@ -271,9 +257,7 @@
   // --- 生命周期 ---
   onLoad(() => {
     loadBanners()
-    loadGradeList()
   })
-  onShow(() => {})
 
   function scroll(e) {
     state.value.isScroll = e.detail.scrollTop > 0
@@ -284,17 +268,6 @@
     if (res.code === 0) banners.value = res.data || []
   }
 
-  async function loadGradeList() {
-    const res = await vk.callFunction({ url: 'client/pub.index.getGradeList' })
-    if (res.code === 1 && res.data) {
-      gradeList.value = res.data
-      if (res.data.length > 0 && !currentGrade.value) {
-        currentGrade.value = res.data[0].name
-        loadSubjectsByGrade(res.data[0].name)
-      }
-    }
-  }
-  // client/pub.index.getTextbookList
   function onBannerTap(banner) {
     if (banner.linkType === 'textbook' && banner.linkValue) {
       vk.navigateTo(`/pages/index/detail?id=${banner.linkValue}`)
