@@ -17,16 +17,10 @@ export default {
         pagePath: '/pages/index/index',
       },
       {
-        iconPath: 'ri:compass-3-line',
-        selectedIconPath: 'ri:compass-3-fill',
-        text: '旅游',
-        pagePath: '/pages/tourGuide/index',
-      },
-      {
-        iconPath: 'ri:chat-smile-2-line',
-        selectedIconPath: 'ri:chat-smile-2-fill',
-        text: '咨询',
-        pagePath: '/pages/consult/index',
+        iconPath: 'ri:grid-line',
+        selectedIconPath: 'ri:grid-fill',
+        text: '分类',
+        pagePath: '/pages/category/index',
       },
       {
         iconPath: 'ri:user-smile-line',
