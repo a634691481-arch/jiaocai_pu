@@ -51,7 +51,7 @@
         <!-- 预览 -->
         <view
           class="flex-1 rounded-2xl py-4 text-center font-bold text-sm active:scale-[0.97] transition-all duration-200 text-white flex items-center justify-center gap-2"
-          style="background: linear-gradient(135deg, #2563EB, #1D4ED8); box-shadow: 0 6rpx 24rpx rgba(37,99,235,0.3)"
+          style="background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 6rpx 24rpx rgba(37, 99, 235, 0.3)"
           @click="handlePreview"
         >
           <yy-icon name="ri:eye-line" size="22" color="#FFFFFF" />
@@ -61,17 +61,25 @@
         <view
           class="flex-1 rounded-2xl py-4 text-center font-bold text-sm active:scale-[0.97] transition-all duration-200 text-white flex items-center justify-center gap-2"
           :style="{
-            background: downloadState === 'success'
-              ? 'linear-gradient(135deg, #059669, #10B981)'
-              : 'linear-gradient(135deg, #8B5FBF, #61398F)',
-            boxShadow: downloadState === 'success'
-              ? '0 6rpx 24rpx rgba(5,150,105,0.3)'
-              : '0 6rpx 24rpx rgba(139,95,191,0.3)',
+            background:
+              downloadState === 'success'
+                ? 'linear-gradient(135deg, #059669, #10B981)'
+                : 'linear-gradient(135deg, #8B5FBF, #61398F)',
+            boxShadow:
+              downloadState === 'success' ? '0 6rpx 24rpx rgba(5,150,105,0.3)' : '0 6rpx 24rpx rgba(139,95,191,0.3)',
           }"
           @click="handleDownload"
         >
-          <yy-icon :name="downloadState === 'success' ? 'ri:checkbox-circle-fill' : 'ri:download-2-line'" size="22" color="#FFFFFF" />
-          <text>{{ downloadState === 'success' ? '已保存' : downloadState === 'downloading' ? downloadProgress + '%' : '下载' }}</text>
+          <yy-icon
+            :name="downloadState === 'success' ? 'ri:checkbox-circle-fill' : 'ri:download-2-line'"
+            size="22"
+            color="#FFFFFF"
+          />
+          <text>
+            {{
+              downloadState === 'success' ? '已保存' : downloadState === 'downloading' ? downloadProgress + '%' : '下载'
+            }}
+          </text>
         </view>
       </view>
 
@@ -199,20 +207,23 @@
         section: decodeURIComponent(options.section || ''),
         fileSize: Number(options.fileSize) || 0,
         fileUrl: decodeURIComponent(options.fileUrl || ''),
-        viewCount: Math.floor(Math.random() * 500),
-        downloadCount: Math.floor(Math.random() * 200),
+        viewCount: 0,
+        downloadCount: 0,
       }
       pagingConfig.value.navTitle = detail.value.title
+      recordView()
+      loadStats()
     } else if (options.id) {
-      // 从 ID 进入（降级兼容，直接用本地数据填充）
       const found = textbookData.find(r => r._id === options.id)
       if (found) {
         detail.value = {
           ...found,
-          viewCount: Math.floor(Math.random() * 500),
-          downloadCount: Math.floor(Math.random() * 200),
+          viewCount: 0,
+          downloadCount: 0,
         }
         pagingConfig.value.navTitle = detail.value.title
+        recordView()
+        loadStats()
       }
     }
   })
@@ -225,7 +236,10 @@
   async function queryList() {
     const sec = detail.value.section
     const subj = detail.value.subject
-    if (!sec || !subj) { paging.value?.complete([]); return }
+    if (!sec || !subj) {
+      paging.value?.complete([])
+      return
+    }
     const related = textbookData
       .filter(r => r.section === sec && r.subject === subj && r.title !== detail.value.title)
       .slice(0, 6)
@@ -236,6 +250,41 @@
     if (!bytes) return '—'
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB'
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
+  }
+
+  function getStatsKey() {
+    return [detail.value.section, detail.value.subject, detail.value.publisher, detail.value.title]
+      .filter(Boolean)
+      .join('#')
+  }
+
+  async function recordView() {
+    const key = getStatsKey()
+    if (!key) return
+    try {
+      await vk.callFunction({ url: 'client/pub.index.recordStat', data: { key, type: 'view', info: detail.value } })
+    } catch (e) { /* 不阻塞 */ }
+  }
+
+  async function recordDownload() {
+    const key = getStatsKey()
+    if (!key) return
+    try {
+      await vk.callFunction({ url: 'client/pub.index.recordStat', data: { key, type: 'download', info: detail.value } })
+      detail.value.downloadCount++
+    } catch (e) { /* 不阻塞 */ }
+  }
+
+  async function loadStats() {
+    const key = getStatsKey()
+    if (!key) return
+    try {
+      const res = await vk.callFunction({ url: 'client/pub.index.getStats', data: { key } })
+      if (res.code === 1 && res.data) {
+        detail.value.viewCount = res.data.views || 0
+        detail.value.downloadCount = res.data.downloads || 0
+      }
+    } catch (e) { /* 不阻塞 */ }
   }
 
   // 公用：获取文件 URL（优先 CDN 直链，降级云函数）
@@ -251,7 +300,10 @@
   /** 预览：下载到临时路径 → 打开文档 */
   async function handlePreview() {
     const url = await getFileUrl()
-    if (!url) { vk.toast('暂无文件'); return }
+    if (!url) {
+      vk.toast('暂无文件')
+      return
+    }
     vk.showLoading('获取中…')
     try {
       const res = await new Promise((resolve, reject) => {
@@ -273,17 +325,23 @@
   async function handleDownload() {
     if (downloadState.value === 'downloading') return
     const url = await getFileUrl()
-    if (!url) { vk.toast('暂无文件'); return }
+    if (!url) {
+      vk.toast('暂无文件')
+      return
+    }
     downloadState.value = 'downloading'
     downloadProgress.value = 0
     try {
       const res = await new Promise((resolve, reject) => {
         const task = uni.downloadFile({ url, success: resolve, fail: reject })
-        task.onProgressUpdate(r => { downloadProgress.value = r.progress })
+        task.onProgressUpdate(r => {
+          downloadProgress.value = r.progress
+        })
       })
       if (res.statusCode === 200) {
         await uni.saveFile({ tempFilePath: res.tempFilePath })
         downloadState.value = 'success'
+        recordDownload()
         vk.toast('已保存到本地')
       } else {
         downloadState.value = 'error'
@@ -296,9 +354,7 @@
   }
 
   function goRelated(item) {
-    vk.navigateTo(
-      `/pages/index/detail?title=${encodeURIComponent(item.title)}&subject=${encodeURIComponent(item.subject)}&publisher=${encodeURIComponent(item.publisher)}&grade=${encodeURIComponent(item.grade)}&section=${encodeURIComponent(item.section)}&fileSize=${item.fileSize}&fileUrl=${encodeURIComponent(item.fileUrl)}`,
-    )
+    vk.navigateTo(`/pages/index/detail?id=${item._id}`)
   }
 
   function onCoverError() {
