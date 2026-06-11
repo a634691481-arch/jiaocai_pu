@@ -191,12 +191,20 @@
     currentGradeFilter.value = g === '全部年级' ? '' : g
   }
 
+  function onPublisherSelect(pub) {
+    showPublisherPicker.value = false
+    publisher.value = pub === '全部版本' ? '' : pub
+    loadGrades()
+    loadLocalData()
+  }
+
   onLoad(options => {
     section.value = options.section || ''
     subject.value = options.subject || ''
     publisher.value = decodeURIComponent(options.publisher || '')
     pageTitle.value = decodeURIComponent(options.title || '')
     if (pageTitle.value) pagingConfig.value.navTitle = pageTitle.value
+    loadPublisherOptions()
     loadGrades()
     loadLocalData()
   })
