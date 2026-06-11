@@ -4,7 +4,7 @@ This file provides guidance to Qoder (qoder.com) when working with code in this 
 
 ## Project Overview
 
-This is a **uni-app + Vue 3 + Vite** cross-platform mini program project (微信小程序为主) called "教材宝". It is a textbook management tool —
+This is a **uni-app + Vue 3 + Vite** cross-platform mini program project (微信小程序为主) called "教材铺". It is a textbook management tool —
 
 The project is built with **HBuilderX** and targets WeChat Mini Program (`mp-weixin`). It also has H5 and App support.
 
@@ -78,7 +78,7 @@ The VK framework (`vk-unicloud`) wraps many uni-app APIs. **Prefer VK wrappers o
 Login and token validation are managed by VK via `app.config.js`:
 
 - `checkTokenPages.mode: 2` means pages **outside** the `list` require login.
-- Whitelist (no login required): `/pages/index/*`, `/pages/login/index`, `/pages/product-intro/*`.
+- Whitelist (no login required): `/pages/index/*`, `/pages/login/index`, `/pages/category/*`, `/pages/textbook/*`, `/pages/my/privacy`.
 - **Must use `vk.navigateTo`** for token check to work on navigation.
 - Tabbar pages that require login must manually call `vk.pubfn.checkLogin()` in `onLoad`.
 - Token key: `uni_id_token` (stored via `uni.setStorageSync`).
