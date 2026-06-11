@@ -35,12 +35,12 @@
         >
           <view class="inline-flex gap-2">
             <view
-              v-for="g in gradeList"
-              :key="g.name"
-              :id="'tab-' + g.name"
+              v-for="sec in sectionList"
+              :key="sec"
+              :id="'section-' + sec"
               class="inline-block px-5 py-2 text-sm font-semibold transition-all duration-300 rounded-full"
               :style="
-                currentGrade === g.name
+                currentSection === sec
                   ? {
                       background: `linear-gradient(135deg, #8B5FBF, #61398F)`,
                       color: '#FFFFFF',
@@ -48,32 +48,33 @@
                     }
                   : { background: '#FFFFFF', color: '#878787', boxShadow: '0 1rpx 4rpx rgba(0,0,0,0.04)' }
               "
-              @click="onGradeClick(g.name)"
+              @click="onSectionClick(sec)"
             >
-              {{ g.name }}
+              {{ sec }}
             </view>
           </view>
         </scroll-view>
 
-        <!-- 科目卡片网格 -->
-        <view v-if="currentSubjects.length" class="grid grid-cols-2 gap-3">
+        <!-- 科目列表 -->
+        <view v-if="currentSubjects.length" class="flex flex-col gap-2">
           <view
             v-for="sub in currentSubjects"
             :key="sub.name"
-            class="rounded-2xl p-4 flex flex-col items-start gap-2 active:scale-[0.97] transition-all duration-150"
-            style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04)"
+            class="flex items-center gap-3.5 rounded-2xl px-4 py-3.5 active:scale-[0.98] transition-all duration-150"
+            style="background: #ffffff; box-shadow: 0 1rpx 6rpx rgba(0,0,0,0.03)"
             @click="onSubjectClick(sub)"
           >
             <view
-              class="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+              class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 text-xl"
               :style="{ background: sub.color + '18' }"
             >
               <text>{{ sub.icon }}</text>
             </view>
-            <view class="flex flex-col gap-0.5">
+            <view class="flex-1 min-w-0">
               <text class="text-sm font-semibold line-clamp-1" style="color: #4a4a4a">{{ sub.name }}</text>
-              <text class="text-xs" style="color: #878787">{{ sub.publisherCount }}个版本</text>
+              <text class="text-xs mt-0.5" style="color: #878787">{{ sub.publisherCount }}个版本</text>
             </view>
+            <yy-icon name="ri:arrow-right-s-line" size="20" :color="th.primary" />
           </view>
         </view>
 
@@ -114,83 +115,33 @@
   const selectedPublishers = ref([])
   const publisherNames = computed(() => selectedPublishers.value)
 
-  // ===== 从 treeData 提取年级列表 =====
-  const allGrades = (() => {
-    const seen = new Set()
-    Object.values(treeData).forEach(section => {
-      Object.values(section).forEach(subject => {
-        Object.values(subject).forEach(grades => {
-          grades.forEach(g => seen.add(g))
-        })
-      })
-    })
-    // 按 GRADE_PRIORITY 排序
-    const order = {
-      '小学低年级':1,'小学高年级':2,'全一册':3,
-      '上册':11,'下册':12,
-      '一年级':20,'二年级':30,'三年级':40,'四年级':50,'五年级':60,'六年级':70,
-      '六年级上册':61,'六年级下册':62,
-      '七年级':80,'七年级上册':81,'七年级下册':82,
-      '八年级':90,'八年级上册':91,'八年级下册':92,
-      '九年级':100,'九年级上册':101,'九年级下册':102,'九年级全一册':103,
-      '必修':201,'必修上':203,'必修下':204,
-      '必修1':210,'必修2':211,'必修3':212,'必修4':213,'必修5':214,'必修6':215,
-      '必修第一册':221,'必修第二册':222,'必修第三册':223,'必修第四册':224,
-      '选择性必修':231,
-      '选择性必修1':241,'选择性必修2':242,'选择性必修3':243,'选择性必修4':244,
-      '选择性必修5':245,'选择性必修6':246,'选择性必修7':247,
-      '选择性必修8':248,'选择性必修9':249,'选择性必修10':250,'选择性必修11':251,
-      '选择性必修上':261,'选择性必修中':262,'选择性必修下':263,
-      '选择性必修第一册':281,'选择性必修第二册':282,'选择性必修第三册':283,'选择性必修第四册':284,
-      '必修全一册':290,
-      '六年级～九年级(五四制)':500,
-      '一年级～六年级':510,'一年级～五年级':511,
-      '1年级~6年级':512,
-      '3年级至4年级':520,'3年级至6年级':521,
-      '1年级至2年级':522,'1年级至3年级':523,'1年级至4年级':524,
-    }
-    return [...seen].sort((a, b) => (order[a] || 999) - (order[b] || 999))
-  })()
+  // ===== treeData 的顶级键即学段列表 =====
+  const sectionList = Object.keys(treeData)
+  const currentSection = ref(sectionList[0] || '')
 
-  const gradeList = ref(allGrades.map(name => ({ name })))
-  const currentGrade = ref(allGrades.length > 0 ? allGrades[0] : '')
-  // ===== 当前年级的科目列表 =====
+  // ===== 当前学段下的科目列表 =====
   const currentSubjects = computed(() => {
-    const g = currentGrade.value
-    if (!g) return []
-    const subjectMap = {}
-    Object.entries(treeData).forEach(([section, subjects]) => {
-      Object.entries(subjects).forEach(([subject, publishers]) => {
-        Object.entries(publishers).forEach(([publisher, grades]) => {
-          if (grades.includes(g)) {
-            if (!subjectMap[subject]) subjectMap[subject] = { publishers: [], publisherCount: 0 }
-            if (!subjectMap[subject].publishers.includes(publisher)) {
-              subjectMap[subject].publishers.push(publisher)
-              subjectMap[subject].publisherCount++
-            }
-          }
-        })
-      })
-    })
-    return Object.entries(subjectMap).map(([name, info]) => ({
+    const sec = currentSection.value
+    if (!sec || !treeData[sec]) return []
+    return Object.entries(treeData[sec]).map(([name, publishers]) => ({
       name,
       icon: getSubjectIcon(name),
       color: getSubjectColor(name),
-      publisherCount: info.publisherCount,
-      publishers: info.publishers,
+      publisherCount: Object.keys(publishers).length,
+      publishers: Object.keys(publishers),
     }))
   })
 
-  // ===== 年级切换自动居中 =====
-  watch(currentGrade, () => {
+  // ===== 学段切换自动居中 =====
+  watch(currentSection, () => {
     nextTick(() => {
       const query = uni.createSelectorQuery().in(tabScrollRef.value)
       query
         .select('.tab-scroll-view')
         .fields({ rect: true, scrollOffset: true }, sv => {
           if (!sv) return
-          query
-            .select('#tab-' + currentGrade.value)
+          uni.createSelectorQuery().in(tabScrollRef.value)
+            .select('#section-' + currentSection.value)
             .fields({ rect: true }, tab => {
               if (!tab) return
               const targetLeft = tab.left - sv.left + sv.scrollLeft
@@ -203,13 +154,13 @@
     })
   })
 
-  function onGradeClick(name) {
-    currentGrade.value = name
+  function onSectionClick(name) {
+    currentSection.value = name
   }
 
   function onSubjectClick(subject) {
     if (!subject.publishers || subject.publishers.length === 0) {
-      vk.navigateTo(`/pages/index/list?grade=${currentGrade.value}&subject=${subject.name}`)
+      vk.navigateTo(`/pages/index/list?section=${currentSection.value}&subject=${subject.name}`)
       return
     }
     selectedSubjectName.value = subject.name
@@ -223,8 +174,10 @@
 
   function goToList(publisher) {
     showPublisherPicker.value = false
+    const sec = currentSection.value
+    const subj = selectedSubjectName.value
     vk.navigateTo(
-      `/pages/index/list?grade=${currentGrade.value}&subject=${selectedSubjectName.value}&publisher=${encodeURIComponent(publisher)}&title=${encodeURIComponent(selectedSubjectName.value + ' · ' + formatPublisherShort(publisher))}`,
+      `/pages/index/list?section=${sec}&subject=${subj}&publisher=${encodeURIComponent(publisher)}&title=${encodeURIComponent(subj + ' · ' + formatPublisherShort(publisher))}`,
     )
   }
 
