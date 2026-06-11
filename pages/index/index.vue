@@ -1,85 +1,91 @@
 <template>
   <yy-paging v-model="state.dataList" @query="queryList" ref="paging" @scroll="scroll" v-bind="pagingConfig">
-    <view class="flex flex-col gap-5 p-4">
+    <view class="flex flex-col p-0" style="background-color: #f5f3f7">
       <!-- Banner -->
-      <view v-if="banners.length" class="rounded-2xl relative overflow-hidden" style="height: 300rpx">
+      <!-- <view v-if="banners.length" class="relative overflow-hidden" style="height: 300rpx">
         <swiper
           class="w-full h-full"
           :autoplay="true"
           :interval="3500"
           :circular="true"
           indicator-dots
-          indicator-color="rgba(255,255,255,0.4)"
-          :indicator-active-color="th.primary"
+          indicator-color="rgba(255,255,255,0.3)"
+          :indicator-active-color="'#8B5FBF'"
         >
           <swiper-item v-for="b in banners" :key="b._id" @click="onBannerTap(b)">
             <image :src="b.imageUrl" mode="aspectFill" class="w-full h-full" />
             <view
               class="absolute inset-0"
-              style="background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.35) 100%)"
+              style="background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.4) 100%)"
             />
           </swiper-item>
         </swiper>
-      </view>
+      </view> -->
 
-      <!-- 学段切换 -->
-      <view>
-        <scroll-view scroll-x class="whitespace-nowrap" :show-scrollbar="false">
-          <view class="inline-flex gap-2.5 px-1">
+      <!-- 内容区 -->
+      <view class="flex flex-col gap-4 px-4 pt-4 pb-6">
+        <!-- 年级切换条 -->
+        <scroll-view
+          ref="tabScrollRef"
+          scroll-x
+          class="whitespace-nowrap tab-scroll-view"
+          :show-scrollbar="false"
+          :scroll-left="tabScrollLeft"
+          scroll-with-animation
+        >
+          <view class="inline-flex gap-2">
             <view
-              v-for="s in sectionKeys"
-              :key="s"
-              class="inline-block px-6 py-2.5 text-sm font-semibold transition-all duration-300 rounded-full relative"
+              v-for="g in gradeList"
+              :key="g.name"
+              :id="'tab-' + g.name"
+              class="inline-block px-5 py-2 text-sm font-semibold transition-all duration-300 rounded-full"
               :style="
-                currentSection === s
+                currentGrade === g.name
                   ? {
-                      background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})`,
+                      background: `linear-gradient(135deg, #8B5FBF, #61398F)`,
                       color: '#FFFFFF',
-                      boxShadow: `0 4rpx 16rpx ${th.primary}4d`,
+                      boxShadow: '0 4rpx 16rpx rgba(139,95,191,0.3)',
                     }
-                  : { background: '#FFFFFF', color: '#6B7280', boxShadow: '0 1rpx 4rpx rgba(0,0,0,0.04)' }
+                  : { background: '#FFFFFF', color: '#878787', boxShadow: '0 1rpx 4rpx rgba(0,0,0,0.04)' }
               "
-              @click="currentSection = s"
+              @click="onGradeClick(g.name)"
             >
-              {{ s }}
-              <view
-                v-if="currentSection === s"
-                class="absolute -bottom-0.5 left-1/2 w-4 h-0.5 rounded-full -translate-x-1/2"
-                style="background: rgba(255, 255, 255, 0.6)"
-              />
+              {{ g.name }}
             </view>
           </view>
         </scroll-view>
-      </view>
 
-      <!-- 科目宫格 -->
-      <view class="grid grid-cols-3 gap-3 pb-4">
-        <view
-          v-for="subject in currentSubjects"
-          :key="subject.name"
-          class="flex flex-col items-center justify-center rounded-2xl py-5 active:scale-[0.93] transition-all duration-250 relative overflow-hidden"
-          :style="{
-            backgroundColor: subject.bg,
-            boxShadow: '0 2rpx 12rpx rgba(0,0,0,0.04)',
-            border: '1rpx solid rgba(255,255,255,0.6)',
-          }"
-          @click="onSubjectClick(subject)"
-        >
+        <!-- 加载中 -->
+        <view v-if="loadingGrade" class="py-10 text-center">
+          <text class="text-sm" style="color: #878787">加载中...</text>
+        </view>
+
+        <!-- 科目列表 -->
+        <view class="rounded-2xl overflow-hidden bg-white" style="box-shadow: 0 2rpx 12rpx rgba(139, 95, 191, 0.04)">
           <view
-            class="opacity-15 absolute inset-0"
-            :style="{ background: `radial-gradient(circle at 30% 20%, ${subject.color}, transparent 70%)` }"
-          />
-          <view
-            class="relative z-10 flex items-center justify-center w-11 h-11 rounded-xl mb-1.5"
-            :style="{
-              background: `linear-gradient(135deg, ${subject.color}15, ${subject.color}08)`,
-              boxShadow: `0 2rpx 8rpx ${subject.color}20`,
-            }"
+            v-for="(subject, idx) in currentSubjects"
+            :key="subject.name"
+            class="flex items-center gap-3 px-4 py-3.5 active:opacity-70 transition-opacity duration-150"
+            :style="{ borderBottom: idx < currentSubjects.length - 1 ? '0.5px solid #E9E4ED' : 'none' }"
+            @click="onSubjectClick(subject)"
           >
-            <text class="text-2xl">{{ subject.icon }}</text>
+            <!-- 色点 + emoji -->
+            <view class="shrink-0 relative flex items-center justify-center" style="width: 52rpx; height: 52rpx">
+              <view class="rounded-xl opacity-15 absolute inset-0" :style="{ background: subject.color }" />
+              <text style="font-size: 26rpx">{{ subject.icon }}</text>
+            </view>
+            <!-- 名称 -->
+            <text class="flex-1 text-sm font-medium" style="color: #4a4a4a">{{ subject.name }}</text>
+            <!-- 版本数 -->
+            <text class="text-xs" style="color: #878787">{{ subject.publisherCount }}个版本</text>
+            <!-- 箭头 -->
+            <text class="ml-1 text-base" style="color: #d6c6e1">›</text>
           </view>
-          <text class="relative z-10 text-xs font-semibold" :style="{ color: subject.color }">{{ subject.name }}</text>
-          <text class="relative z-10 mt-0.5 text-xs" style="color: #94a3b8">{{ subject.publisherCount }}版</text>
+        </view>
+
+        <!-- 无数据 -->
+        <view v-if="!currentSubjects.length && !loadingGrade" class="py-10 text-center">
+          <text class="text-sm" style="color: #878787">暂无科目数据</text>
         </view>
       </view>
     </view>
@@ -90,8 +96,6 @@
 </template>
 
 <script setup>
-  import textbookTree from '@/common/mock/textbook-tree.js'
-
   const th = uni.$u.color
 
   const pagingConfig = ref({
@@ -102,64 +106,94 @@
     hideNav: false,
     showNavBack: false,
     navTitle: '教材宝',
-    color: th.primary,
   })
 
   const state = ref({ isScroll: false, dataList: [] })
   const paging = ref()
   const banners = ref([])
+  const tabScrollRef = ref(null)
+  const tabScrollLeft = ref(0)
   const showPublisherPicker = ref(false)
   const selectedSubjectName = ref('')
-  const selectedPublishers = ref({})
-  const publisherNames = computed(() => Object.keys(selectedPublishers.value))
+  const selectedPublishers = ref([])
+  const publisherNames = computed(() => selectedPublishers.value)
 
-  // --- 从 tree 动态提取 ---
-  const sectionKeys = Object.keys(textbookTree)
-  const currentSection = ref('小学')
+  // 年级列表 + 当前年级
+  const gradeList = ref([])
+  const currentGrade = ref('')
+  const loadingGrade = ref(false)
 
-  const currentSubjects = computed(() => {
-    const sectionData = textbookTree[currentSection.value]
-    if (!sectionData) return []
-    return Object.entries(sectionData).map(([name, publishers]) => ({
-      name,
-      icon: getSubjectIcon(name),
-      color: getSubjectColor(name),
-      bg: getSubjectBg(name),
-      publisherCount: Array.isArray(publishers) ? 0 : Object.keys(publishers).length,
-      publishers,
-    }))
+  // 当前年级下的科目列表
+  const currentSubjects = ref([])
+
+  watch(currentGrade, () => {
+    nextTick(() => {
+      const query = uni.createSelectorQuery().in(tabScrollRef.value)
+      query
+        .select('.tab-scroll-view')
+        .fields({ rect: true, scrollOffset: true }, sv => {
+          if (!sv) return
+          query
+            .select('#tab-' + currentGrade.value)
+            .fields({ rect: true }, tab => {
+              if (!tab) return
+              const targetLeft = tab.left - sv.left + sv.scrollLeft
+              const offset = targetLeft - sv.width / 2 + tab.width / 2
+              tabScrollLeft.value = Math.max(0, offset)
+            })
+            .exec()
+        })
+        .exec()
+    })
   })
 
+  function onGradeClick(name) {
+    currentGrade.value = name
+    loadSubjectsByGrade(name)
+  }
+
+  async function loadSubjectsByGrade(name) {
+    loadingGrade.value = true
+    currentSubjects.value = []
+    const res = await vk.callFunction({
+      url: 'client/pub.index.getSubjectByGrade',
+      data: { name },
+    })
+    if (res.code === 1 && res.data) {
+      currentSubjects.value = Object.entries(res.data).map(([name, info]) => ({
+        name,
+        icon: getSubjectIcon(name),
+        color: getSubjectColor(name),
+        publisherCount: info.publisherCount,
+        publishers: info.publishers,
+      }))
+    }
+    loadingGrade.value = false
+  }
+
   function onSubjectClick(subject) {
-    if (!subject.publishers || Array.isArray(subject.publishers)) {
-      // 无出版社层级（如刷习题），直接跳
-      vk.navigateTo(`/pages/index/list?section=${currentSection.value}&subject=${subject.name}`)
+    if (!subject.publishers || subject.publishers.length === 0) {
+      vk.navigateTo(`/pages/index/list?grade=${currentGrade.value}&subject=${subject.name}`)
       return
     }
     selectedSubjectName.value = subject.name
-    const entries = Object.entries(subject.publishers)
-    if (entries.length === 1) {
-      // 仅一个出版社，直接跳
-      const [publisher, grades] = entries[0]
-      goToList(publisher, grades)
+    if (subject.publishers.length === 1) {
+      goToList(subject.publishers[0])
       return
     }
-    // 多出版社：弹窗选择
     selectedPublishers.value = subject.publishers
     showPublisherPicker.value = true
   }
 
-  function goToList(publisher, grades) {
+  function goToList(publisher) {
     showPublisherPicker.value = false
-    const firstGrade = Array.isArray(grades) ? grades[0] : ''
     vk.navigateTo(
-      `/pages/index/list?section=${currentSection.value}&subject=${selectedSubjectName.value}&publisher=${encodeURIComponent(publisher)}&grade=${encodeURIComponent(firstGrade)}&title=${encodeURIComponent(selectedSubjectName.value + ' · ' + formatPublisherShort(publisher))}`,
+      `/pages/index/list?grade=${currentGrade.value}&subject=${selectedSubjectName.value}&publisher=${encodeURIComponent(publisher)}&title=${encodeURIComponent(selectedSubjectName.value + ' · ' + formatPublisherShort(publisher))}`,
     )
   }
 
   function onPublisherSelect(publisher) {
-    const grades = selectedPublishers.value[publisher]
-    goToList(publisher, grades)
+    goToList(publisher)
   }
 
   function formatPublisherShort(publisher) {
@@ -197,7 +231,6 @@
       线性代数: '∑',
       概率论与数理统计: '📊',
       离散数学: '🔢',
-      初中练习题_带答案: '📝',
     }
     return map[name] || '📚'
   }
@@ -231,48 +264,14 @@
       线性代数: '#3730A3',
       概率论与数理统计: '#5B21B6',
       离散数学: '#312E81',
-      初中练习题_带答案: '#B45309',
     }
     return map[name] || '#6B7280'
-  }
-
-  function getSubjectBg(name) {
-    const map = {
-      语文: '#FEF2F2',
-      数学: '#EFF6FF',
-      英语: '#F5F3FF',
-      物理: '#FFFBEB',
-      化学: '#ECFDF5',
-      生物学: '#F0FDF4',
-      生物: '#F0FDF4',
-      历史: '#FFFBEB',
-      地理: '#ECFEFF',
-      道德与法治: '#FDF2F8',
-      思想政治: '#FDF2F8',
-      科学: '#F0FDFA',
-      体育与健康: '#FFF7ED',
-      音乐: '#FAFAF5',
-      美术: '#FDF4FF',
-      艺术: '#FFF1F2',
-      '语文·书法练习指导': '#FFFBEB',
-      日语: '#FDF2F8',
-      俄语: '#EFF6FF',
-      人文地理: '#ECFEFF',
-      地理图册: '#F0F9FF',
-      通用技术: '#EEF2FF',
-      信息技术: '#EFF6FF',
-      高等数学: '#EFF6FF',
-      线性代数: '#EEF2FF',
-      概率论与数理统计: '#F5F3FF',
-      离散数学: '#EEF2FF',
-      初中练习题_带答案: '#FFFBEB',
-    }
-    return map[name] || '#F9FAFB'
   }
 
   // --- 生命周期 ---
   onLoad(() => {
     loadBanners()
+    loadGradeList()
   })
   onShow(() => {})
 
@@ -281,10 +280,21 @@
   }
 
   async function loadBanners() {
-    const res = await vk.callFunction({ url: 'client/pub_index.getBanners' })
-    if (res.code === 1) banners.value = res.data || []
+    const res = await vk.callFunction({ url: 'client/pub.index.getBanners' })
+    if (res.code === 0) banners.value = res.data || []
   }
 
+  async function loadGradeList() {
+    const res = await vk.callFunction({ url: 'client/pub.index.getGradeList' })
+    if (res.code === 1 && res.data) {
+      gradeList.value = res.data
+      if (res.data.length > 0 && !currentGrade.value) {
+        currentGrade.value = res.data[0].name
+        loadSubjectsByGrade(res.data[0].name)
+      }
+    }
+  }
+  // client/pub.index.getTextbookList
   function onBannerTap(banner) {
     if (banner.linkType === 'textbook' && banner.linkValue) {
       vk.navigateTo(`/pages/index/detail?id=${banner.linkValue}`)
