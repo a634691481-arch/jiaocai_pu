@@ -362,7 +362,8 @@
   }
 
   function goRelated(item) {
-    const idx = textbookData.indexOf(item)
+    let idx = textbookData.indexOf(item)
+    if (idx === -1) idx = textbookData.findIndex(r => r.title === item.title && r.publisher === item.publisher && r.grade === item.grade)
     vk.navigateTo(`/pages/index/detail?idx=${idx}`)
   }
 
