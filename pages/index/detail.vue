@@ -1,18 +1,18 @@
 <template>
   <yy-paging v-model="state.dataList" @query="queryList" ref="paging" @scroll="scroll" v-bind="pagingConfig">
-    <view class="flex-col gap-4 px-4 pb-6 pt-4" style="background-color: #f5f3f7">
+    <view class="flex-col gap-4 px-4 pt-4 pb-6" style="background-color: #f5f3f7">
       <!-- 封面区 -->
       <view class="flex gap-4">
         <view
-          class="rounded-2xl shrink-0 relative overflow-hidden flex items-center justify-center"
+          class="rounded-2xl shrink-0 relative flex items-center justify-center overflow-hidden"
           style="width: 250rpx; height: 330rpx; box-shadow: 0 8rpx 32rpx rgba(139, 95, 191, 0.1)"
         >
           <view
-            class="absolute -top-4 -right-4 w-20 h-20 rounded-full opacity-20"
+            class="-top-4 -right-4 opacity-20 absolute w-20 h-20 rounded-full"
             :style="{ backgroundcolor: uni.$u.color.primary }"
           />
           <view
-            class="absolute -bottom-6 -left-4 w-16 h-16 rounded-full opacity-15"
+            class="-bottom-6 -left-4 opacity-15 absolute w-16 h-16 rounded-full"
             :style="{ backgroundColor: '#61398F' }"
           />
           <view class="absolute inset-0" :style="{ background: `linear-gradient(135deg, #D6C6E1, #F0FDFA)` }" />
@@ -25,7 +25,7 @@
           />
           <view v-else class="relative z-10 flex flex-col items-center justify-center gap-2">
             <view
-              class="w-16 h-20 rounded-lg flex items-center justify-center"
+              class="flex items-center justify-center w-16 h-20 rounded-lg"
               style="background: linear-gradient(135deg, #ef4444, #dc2626)"
             >
               <text class="text-sm font-black tracking-wider text-white">PDF</text>
@@ -33,7 +33,7 @@
             <text class="text-xs font-medium" style="color: #878787">{{ detail.section || '' }}</text>
           </view>
         </view>
-        <view class="flex-col gap-2 flex-1 justify-center">
+        <view class="flex-col justify-center flex-1 gap-2">
           <text class="text-base font-bold leading-snug" style="color: #4a4a4a">{{ detail.title || '加载中…' }}</text>
           <view class="flex items-center gap-1.5 mt-0.5">
             <yy-icon name="ri:building-2-line" size="24" color="#8B5FBF" />
@@ -64,7 +64,7 @@
 
       <!-- 统计 -->
       <view
-        class="rounded-2xl flex overflow-hidden py-4"
+        class="rounded-2xl flex py-4 overflow-hidden"
         style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(139, 95, 191, 0.06)"
       >
         <view class="flex-col items-center flex-1 gap-1.5">
@@ -137,13 +137,13 @@
             @click="goRelated(item)"
           >
             <view
-              class="relative shrink-0 w-9 h-12 rounded-lg overflow-hidden flex flex-col items-center justify-center"
+              class="shrink-0 w-9 relative flex flex-col items-center justify-center h-12 overflow-hidden rounded-lg"
               style="background: linear-gradient(135deg, #ef4444, #dc2626)"
             >
               <text class="text-[9px] font-black tracking-wider text-white">PDF</text>
             </view>
             <view class="flex-1 min-w-0">
-              <text class="text-sm font-semibold line-clamp-1" style="color: #4a4a4a">{{ item.title }}</text>
+              <text class="line-clamp-1 text-sm font-semibold" style="color: #4a4a4a">{{ item.title }}</text>
               <text class="text-xs mt-0.5" style="color: #878787">{{ item.publisher }} · {{ item.grade }}</text>
             </view>
             <view class="flex items-center gap-1">
@@ -158,6 +158,8 @@
 </template>
 
 <script setup>
+  import textbookData from '@/static/textbook-data.json'
+
   const pagingConfig = ref({
     auto: true,
     refresherEnabled: false,
@@ -182,9 +184,8 @@
     error: { key: 'error', text: '下载失败 · 点击重试', bg: 'linear-gradient(135deg, #EF4444, #F87171)' },
   }
 
-  onLoad(options => {
+  onLoad((options) => {
     if (options.title) {
-      // 从 list 页以参数方式进入（降级兼容）
       detail.value = {
         title: decodeURIComponent(options.title),
         subject: decodeURIComponent(options.subject || ''),
@@ -192,13 +193,22 @@
         grade: decodeURIComponent(options.grade || ''),
         section: decodeURIComponent(options.section || ''),
         fileSize: Number(options.fileSize) || 0,
+        fileUrl: decodeURIComponent(options.fileUrl || ''),
         viewCount: Math.floor(Math.random() * 500),
         downloadCount: Math.floor(Math.random() * 200),
       }
       pagingConfig.value.navTitle = detail.value.title
     } else if (options.id) {
-      loadDetail(options.id)
-      incrementView(options.id)
+      // 从 ID 进入（降级兼容，直接用本地数据填充）
+      const found = textbookData.find(r => r._id === options.id)
+      if (found) {
+        detail.value = {
+          ...found,
+          viewCount: Math.floor(Math.random() * 500),
+          downloadCount: Math.floor(Math.random() * 200),
+        }
+        pagingConfig.value.navTitle = detail.value.title
+      }
     }
   })
   onShow(() => {})
@@ -207,31 +217,14 @@
     state.value.isScroll = e.detail.scrollTop > 0
   }
 
-  async function loadDetail(id) {
-    const res = await vk.callFunction({ url: 'client/pub.index.getTextbookDetail', data: { id } })
-    if (res.code === 1) {
-      detail.value = res.data || {}
-      pagingConfig.value.navTitle = detail.value.title
-    }
-  }
-
-  async function incrementView(id) {
-    try {
-      await vk.callFunction({ url: 'client/pub.index.incrementViewCount', data: { id, type: 'view' } })
-    } catch (e) { /* 不阻塞 */ }
-  }
-
   async function queryList() {
-    try {
-      const res = await vk.callFunction({ url: 'client/pub.index.getHotTextbooks', data: { limit: 6 } })
-      if (res.code === 1) {
-        paging.value?.complete(res.data || [])
-      } else {
-        paging.value?.complete([])
-      }
-    } catch (e) {
-      paging.value?.complete([])
-    }
+    const sec = detail.value.section
+    const subj = detail.value.subject
+    if (!sec || !subj) { paging.value?.complete([]); return }
+    const related = textbookData
+      .filter(r => r.section === sec && r.subject === subj && r.title !== detail.value.title)
+      .slice(0, 6)
+    paging.value?.complete(related)
   }
 
   function formatSize(bytes) {
@@ -250,6 +243,36 @@
     downloadState.value = 'loading'
 
     try {
+      // 有 CDN 直链 → 直接下载
+      if (detail.value.fileUrl) {
+        const task = uni.downloadFile({
+          url: detail.value.fileUrl,
+          success(r) {
+            if (r.statusCode === 200) {
+              uni.openDocument({
+                filePath: r.tempFilePath,
+                success() {
+                  downloadState.value = 'success'
+                },
+                fail() {
+                  downloadState.value = 'error'
+                },
+              })
+            } else {
+              downloadState.value = 'error'
+            }
+          },
+          fail() {
+            downloadState.value = 'error'
+          },
+        })
+        task.onProgressUpdate(r => {
+          downloadProgress.value = r.progress
+          downloadState.value = 'downloading'
+        })
+        return
+      }
+      // 有 _id → 走云函数获取下载链接
       if (detail.value._id) {
         const res = await vk.callFunction({ url: 'client/pub.index.getDownloadUrl', data: { id: detail.value._id } })
         if (res.code === 1 && res.data?.fileUrl) {
@@ -259,12 +282,20 @@
               if (r.statusCode === 200) {
                 uni.openDocument({
                   filePath: r.tempFilePath,
-                  success() { downloadState.value = 'success' },
-                  fail() { downloadState.value = 'error' },
+                  success() {
+                    downloadState.value = 'success'
+                  },
+                  fail() {
+                    downloadState.value = 'error'
+                  },
                 })
-              } else { downloadState.value = 'error' }
+              } else {
+                downloadState.value = 'error'
+              }
             },
-            fail() { downloadState.value = 'error' },
+            fail() {
+              downloadState.value = 'error'
+            },
           })
           task.onProgressUpdate(r => {
             downloadProgress.value = r.progress
@@ -283,11 +314,15 @@
           downloadState.value = 'success'
         }
       }, 200)
-    } catch (e) { downloadState.value = 'error' }
+    } catch (e) {
+      downloadState.value = 'error'
+    }
   }
 
   function goRelated(item) {
-    vk.navigateTo(`/pages/index/detail?id=${item._id}`)
+    vk.navigateTo(
+      `/pages/index/detail?title=${encodeURIComponent(item.title)}&subject=${encodeURIComponent(item.subject)}&publisher=${encodeURIComponent(item.publisher)}&grade=${encodeURIComponent(item.grade)}&section=${encodeURIComponent(item.section)}&fileSize=${item.fileSize}&fileUrl=${encodeURIComponent(item.fileUrl)}`,
+    )
   }
 
   function onCoverError() {
