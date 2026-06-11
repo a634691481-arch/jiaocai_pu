@@ -127,7 +127,7 @@
     vk.setStorageSync('search_history', [])
   }
 
-  function goDetail(item) { vk.navigateTo(`/pages/category/detail?id=${item._id}`) }
+  function goDetail(item) { vk.navigateTo(`/pages/index/detail?id=${item._id}`) }
 </script>
 
 <style lang="scss" scoped></style>
