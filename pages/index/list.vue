@@ -39,12 +39,16 @@
 
   const state = ref({ isScroll: false, dataList: [] })
   const paging = ref()
-  const grade = ref('')
+  const section = ref('')
   const subject = ref('')
+  const publisher = ref('')
+  const grade = ref('')
 
   onLoad((options) => {
-    grade.value = options.grade || ''
+    section.value = options.section || ''
     subject.value = options.subject || ''
+    publisher.value = decodeURIComponent(options.publisher || '')
+    grade.value = decodeURIComponent(options.grade || '')
     pagingConfig.value.navTitle = decodeURIComponent(options.title || '教材列表')
   })
 
