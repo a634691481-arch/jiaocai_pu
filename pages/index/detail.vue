@@ -46,20 +46,33 @@
         </view>
       </view>
 
-      <!-- 下载按钮 -->
-      <view
-        class="rounded-2xl py-4 text-center font-bold text-base active:scale-[0.97] transition-all duration-250 relative overflow-hidden text-white flex items-center justify-center gap-2"
-        :style="{
-          background: DOWNLOAD_STATES[downloadState].bg,
-          boxShadow: downloadState === 'idle' ? '0 6rpx 24rpx rgba(139,95,191,0.3)' : '',
-        }"
-        @click="handleDownload"
-      >
-        <yy-icon v-if="downloadState === 'idle'" name="ri:download-2-line" size="24" color="#FFFFFF" />
-        <yy-icon v-if="downloadState === 'success'" name="ri:checkbox-circle-fill" size="24" color="#FFFFFF" />
-        <yy-icon v-if="downloadState === 'error'" name="ri:close-circle-fill" size="24" color="#FFFFFF" />
-        <text class="relative z-10">{{ DOWNLOAD_STATES[downloadState].text }}</text>
-        <text v-if="downloadState === 'downloading'" class="relative z-10 ml-1">{{ downloadProgress }}%</text>
+      <!-- 操作按钮：预览 + 下载 -->
+      <view class="flex gap-3">
+        <!-- 预览 -->
+        <view
+          class="flex-1 rounded-2xl py-4 text-center font-bold text-sm active:scale-[0.97] transition-all duration-200 text-white flex items-center justify-center gap-2"
+          style="background: linear-gradient(135deg, #2563EB, #1D4ED8); box-shadow: 0 6rpx 24rpx rgba(37,99,235,0.3)"
+          @click="handlePreview"
+        >
+          <yy-icon name="ri:eye-line" size="22" color="#FFFFFF" />
+          <text>预览</text>
+        </view>
+        <!-- 下载 -->
+        <view
+          class="flex-1 rounded-2xl py-4 text-center font-bold text-sm active:scale-[0.97] transition-all duration-200 text-white flex items-center justify-center gap-2"
+          :style="{
+            background: downloadState === 'success'
+              ? 'linear-gradient(135deg, #059669, #10B981)'
+              : 'linear-gradient(135deg, #8B5FBF, #61398F)',
+            boxShadow: downloadState === 'success'
+              ? '0 6rpx 24rpx rgba(5,150,105,0.3)'
+              : '0 6rpx 24rpx rgba(139,95,191,0.3)',
+          }"
+          @click="handleDownload"
+        >
+          <yy-icon :name="downloadState === 'success' ? 'ri:checkbox-circle-fill' : 'ri:download-2-line'" size="22" color="#FFFFFF" />
+          <text>{{ downloadState === 'success' ? '已保存' : downloadState === 'downloading' ? downloadProgress + '%' : '下载' }}</text>
+        </view>
       </view>
 
       <!-- 统计 -->
@@ -176,14 +189,6 @@
   const downloadState = ref('idle')
   const downloadProgress = ref(0)
 
-  const DOWNLOAD_STATES = {
-    idle: { key: 'idle', text: '免费下载教材', bg: `linear-gradient(135deg, #8B5FBF, #61398F)` },
-    loading: { key: 'loading', text: '正在获取下载链接…', bg: 'linear-gradient(135deg, #9CA3AF, #B0B7C3)' },
-    downloading: { key: 'downloading', text: '', bg: 'linear-gradient(135deg, #0D9488, #14B8A6)' },
-    success: { key: 'success', text: '下载完成，可在微信中查看', bg: 'linear-gradient(135deg, #059669, #10B981)' },
-    error: { key: 'error', text: '下载失败 · 点击重试', bg: 'linear-gradient(135deg, #EF4444, #F87171)' },
-  }
-
   onLoad((options) => {
     if (options.title) {
       detail.value = {
@@ -233,89 +238,60 @@
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
   }
 
-  async function handleDownload() {
-    if (downloadState.value === 'downloading' || downloadState.value === 'loading') return
-    if (downloadState.value === 'error') {
-      downloadState.value = 'idle'
-      return
+  // 公用：获取文件 URL（优先 CDN 直链，降级云函数）
+  async function getFileUrl() {
+    if (detail.value.fileUrl) return detail.value.fileUrl
+    if (detail.value._id) {
+      const res = await vk.callFunction({ url: 'client/pub.index.getDownloadUrl', data: { id: detail.value._id } })
+      if (res.code === 1 && res.data?.fileUrl) return res.data.fileUrl
     }
+    return null
+  }
 
-    downloadState.value = 'loading'
-
+  /** 预览：下载到临时路径 → 打开文档 */
+  async function handlePreview() {
+    const url = await getFileUrl()
+    if (!url) { vk.toast('暂无文件'); return }
+    vk.showLoading('获取中…')
     try {
-      // 有 CDN 直链 → 直接下载
-      if (detail.value.fileUrl) {
-        const task = uni.downloadFile({
-          url: detail.value.fileUrl,
-          success(r) {
-            if (r.statusCode === 200) {
-              uni.openDocument({
-                filePath: r.tempFilePath,
-                success() {
-                  downloadState.value = 'success'
-                },
-                fail() {
-                  downloadState.value = 'error'
-                },
-              })
-            } else {
-              downloadState.value = 'error'
-            }
-          },
-          fail() {
-            downloadState.value = 'error'
-          },
-        })
-        task.onProgressUpdate(r => {
-          downloadProgress.value = r.progress
-          downloadState.value = 'downloading'
-        })
-        return
+      const res = await new Promise((resolve, reject) => {
+        uni.downloadFile({ url, success: resolve, fail: reject })
+      })
+      vk.hideLoading()
+      if (res.statusCode === 200) {
+        uni.openDocument({ filePath: res.tempFilePath })
+      } else {
+        vk.toast('预览失败')
       }
-      // 有 _id → 走云函数获取下载链接
-      if (detail.value._id) {
-        const res = await vk.callFunction({ url: 'client/pub.index.getDownloadUrl', data: { id: detail.value._id } })
-        if (res.code === 1 && res.data?.fileUrl) {
-          const task = uni.downloadFile({
-            url: res.data.fileUrl,
-            success(r) {
-              if (r.statusCode === 200) {
-                uni.openDocument({
-                  filePath: r.tempFilePath,
-                  success() {
-                    downloadState.value = 'success'
-                  },
-                  fail() {
-                    downloadState.value = 'error'
-                  },
-                })
-              } else {
-                downloadState.value = 'error'
-              }
-            },
-            fail() {
-              downloadState.value = 'error'
-            },
-          })
-          task.onProgressUpdate(r => {
-            downloadProgress.value = r.progress
-            downloadState.value = 'downloading'
-          })
-          return
-        }
+    } catch (e) {
+      vk.hideLoading()
+      vk.toast('预览失败')
+    }
+  }
+
+  /** 下载：下载到临时路径 → 保存到本地 */
+  async function handleDownload() {
+    if (downloadState.value === 'downloading') return
+    const url = await getFileUrl()
+    if (!url) { vk.toast('暂无文件'); return }
+    downloadState.value = 'downloading'
+    downloadProgress.value = 0
+    try {
+      const res = await new Promise((resolve, reject) => {
+        const task = uni.downloadFile({ url, success: resolve, fail: reject })
+        task.onProgressUpdate(r => { downloadProgress.value = r.progress })
+      })
+      if (res.statusCode === 200) {
+        await uni.saveFile({ tempFilePath: res.tempFilePath })
+        downloadState.value = 'success'
+        vk.toast('已保存到本地')
+      } else {
+        downloadState.value = 'error'
+        vk.toast('下载失败')
       }
-      // 无云端数据，模拟完成
-      downloadState.value = 'downloading'
-      downloadProgress.value = 0
-      const timer = setInterval(() => {
-        downloadProgress.value += 10
-        if (downloadProgress.value >= 100) {
-          clearInterval(timer)
-          downloadState.value = 'success'
-        }
-      }, 200)
     } catch (e) {
       downloadState.value = 'error'
+      vk.toast('下载失败')
     }
   }
 

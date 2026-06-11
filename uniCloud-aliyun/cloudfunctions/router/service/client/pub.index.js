@@ -346,11 +346,11 @@ const cloudObject = {
       try {
         await db.collection(DB_NAME).add(r);
         success++;
-      } catch (e) {}
+      } catch (e) { }
     }
 
     let hasMore = end < total;
-    return { code: 1, msg: `第${batch+1}批完成`, success, batch, total, imported: end, hasMore };
+    return { code: 1, msg: `第${batch + 1}批完成`, success, batch, total, imported: end, hasMore };
   },
 
   /**
@@ -385,11 +385,11 @@ const cloudObject = {
       try {
         await db.collection('grades').add(r);
         success++;
-      } catch (e) {}
+      } catch (e) { }
     }
 
     let hasMore = end < total;
-    return { code: 1, msg: `第${batch+1}批完成`, success, batch, total, imported: end, hasMore };
+    return { code: 1, msg: `第${batch + 1}批完成`, success, batch, total, imported: end, hasMore };
   },
 
   /**
@@ -399,7 +399,7 @@ const cloudObject = {
     let db = uniCloud.database();
     let defaults = [
       {
-        title: '教材宝-海量教材免费下载',
+        title: '教材铺-海量教材免费下载',
         imageUrl: '/static/20251218160253716.png',
         linkType: 'none',
         linkValue: '',
@@ -432,7 +432,7 @@ const cloudObject = {
       try {
         await db.collection('banners').add(r);
         count++;
-      } catch (e) {}
+      } catch (e) { }
     }
     return { code: 1, msg: `导入${count}条Banner` };
   },
