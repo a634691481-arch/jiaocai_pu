@@ -1,51 +1,43 @@
 <template>
   <yy-paging v-model="state.dataList" @query="queryList" ref="paging" @scroll="scroll" v-bind="pagingConfig">
-    <view class="flex flex-col gap-4 p-4">
+    <view class="flex flex-col gap-4 p-4" style="background-color: #f5f3f7">
       <!-- 头部 -->
       <view
         class="rounded-2xl relative flex items-center gap-4 p-5 overflow-hidden"
-        style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04)"
+        style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(139, 95, 191, 0.06)"
       >
-        <view
-          class="-top-6 -right-6 opacity-6 absolute w-20 h-20 rounded-full"
-          :style="{ backgroundColor: th.primary }"
-        />
+        <view class="-top-6 -right-6 opacity-6 absolute w-20 h-20 rounded-full" :style="{ backgroundColor: '#D6C6E1' }" />
         <view
           class="rounded-2xl relative z-10 flex items-center justify-center w-12 h-12"
-          :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }"
+          :style="{ background: `linear-gradient(135deg, #8B5FBF, #61398F)` }"
         >
           <yy-icon name="ri:shield-check-line" size="24" color="#ffffff" />
         </view>
         <view class="relative z-10">
-          <text class="text-base font-bold" style="color: #1f2937">隐私与协议</text>
-          <text class="mt-1 text-xs" style="color: #9ca3af">更新于 2025年6月</text>
+          <text class="text-base font-bold" style="color: #4a4a4a">隐私与协议</text>
+          <text class="mt-1 text-xs" style="color: #878787">更新于 2025年6月</text>
         </view>
       </view>
 
       <!-- 内容区 -->
       <view
         class="rounded-2xl flex-col gap-6 p-5"
-        style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04)"
+        style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(139, 95, 191, 0.06)"
       >
         <view v-for="(section, idx) in sections" :key="idx" class="flex-col gap-3">
           <view class="flex items-center gap-3">
             <view
               class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg"
-              :style="{ background: `linear-gradient(135deg, ${th.primaryLight}, ${th.primaryLight})` }"
+              :style="{ background: `linear-gradient(135deg, rgba(139,95,191,0.08), rgba(139,95,191,0.08))` }"
             >
-              <text class="text-xs font-bold" :style="{ color: th.primary }">{{ idx + 1 }}</text>
+              <text class="text-xs font-bold" style="color: #8b5fbf">{{ idx + 1 }}</text>
             </view>
-            <text class="text-sm font-bold" style="color: #1f2937">{{ section.title }}</text>
+            <text class="text-sm font-bold" style="color: #4a4a4a">{{ section.title }}</text>
           </view>
-          <text class="pl-10 text-sm leading-relaxed" style="color: #6b7280">{{ section.content }}</text>
+          <text class="pl-10 text-sm leading-relaxed" style="color: #878787">{{ section.content }}</text>
         </view>
       </view>
 
-      <!-- 底部 -->
-      <view class="flex items-center justify-center gap-2 py-2">
-        <yy-icon name="ri:mail-line" size="14" style="color: #d1d5db" />
-        <text class="text-xs" style="color: #9ca3af">如有疑问请联系客服</text>
-      </view>
     </view>
   </yy-paging>
 </template>
@@ -61,7 +53,7 @@
     hideNav: false,
     showNavBack: true,
     navTitle: '隐私与协议',
-    color: th.primary,
+    color: uni.$u.color.primary,
   })
 
   const state = ref({ isScroll: false, dataList: [] })
