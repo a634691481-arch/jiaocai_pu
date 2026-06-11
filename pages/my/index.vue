@@ -107,7 +107,7 @@
   function goLogin() { vk.navigateTo('/pages/login/index') }
   function goDownloadHistory() { vk.navigateTo('/pages/my/download-history') }
   function goPrivacy() { vk.navigateTo('/pages/my/privacy') }
-  function openDownload(dl) { vk.navigateTo(`/pages/category/detail?id=${dl.textbookId}`) }
+  function openDownload(dl) { vk.navigateTo(`/pages/index/detail?id=${dl.textbookId}`) }
 
   function formatTime(ts) {
     if (!ts) return ''
