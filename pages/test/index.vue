@@ -1,13 +1,13 @@
 <template>
-  <view class="min-h-screen px-4 pb-8" style="background:#F5F5F5">
-    <view class="pt-2 pb-3 text-sm text-gray-400">
+  <view class="min-h-screen px-3 pb-3" style="background:#F5F5F5">
+    <view class="pt-3 pb-3 text-sm text-gray-400">
       批量导入测试工具 — 将本地数据一键导入数据库
     </view>
 
     <!-- Textbooks -->
-    <view class="mb-4 p-4 bg-white rounded-xl shadow-sm">
+    <view class="mb-3 p-3 bg-white rounded-xl shadow-sm">
       <view class="flex items-center justify-between mb-3">
-        <view class="flex items-center gap-2">
+        <view class="flex items-center gap-3">
           <view class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#E8F5E9">
             <text class="text-base">📚</text>
           </view>
@@ -17,27 +17,27 @@
           </view>
         </view>
         <view
-          class="px-4 py-1.5 text-xs font-semibold rounded-full active:opacity-80"
+          class="px-3 py-3 text-xs font-semibold rounded-full active:opacity-80"
           :style="txtRunning ? { background:'#E5E5E5', color:'#999' } : { background:'linear-gradient(135deg,#8B5FBF,#61398F)', color:'#FFF' }"
           @click="!txtRunning && importTextbooks()">
           {{ txtRunning ? `${txtProgress.batch}/${txtProgress.totalBatches}` : '开始导入' }}
         </view>
       </view>
-      <view v-if="txtProgress.msg" class="text-xs py-2 px-3 rounded-lg" :style="{ background: txtProgress.err ? '#FFF2F2' : '#F0FFF0', color: txtProgress.err ? '#E54B4B' : '#2E7D32' }">
+      <view v-if="txtProgress.msg" class="text-xs py-3 px-3 rounded-lg" :style="{ background: txtProgress.err ? '#FFF2F2' : '#F0FFF0', color: txtProgress.err ? '#E54B4B' : '#2E7D32' }">
         {{ txtProgress.msg }}
       </view>
-      <view v-if="txtProgress.total > 0" class="mt-2">
+      <view v-if="txtProgress.total > 0" class="mt-3">
         <view class="h-2 bg-gray-100 rounded-full overflow-hidden">
           <view class="h-full rounded-full transition-all duration-300" style="background:linear-gradient(90deg,#8B5FBF,#61398F)" :style="{ width: txtProgress.total ? (txtProgress.imported / txtProgress.total * 100) + '%' : '0%' }"></view>
         </view>
-        <text class="text-xs text-gray-400 mt-1 block">{{ txtProgress.imported }}/{{ txtProgress.total }}</text>
+        <text class="text-xs text-gray-400 mt-3 block">{{ txtProgress.imported }}/{{ txtProgress.total }}</text>
       </view>
     </view>
 
     <!-- Grades -->
-    <view class="mb-4 p-4 bg-white rounded-xl shadow-sm">
+    <view class="mb-3 p-3 bg-white rounded-xl shadow-sm">
       <view class="flex items-center justify-between mb-3">
-        <view class="flex items-center gap-2">
+        <view class="flex items-center gap-3">
           <view class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#FFF3E0">
             <text class="text-base">🏫</text>
           </view>
@@ -47,27 +47,27 @@
           </view>
         </view>
         <view
-          class="px-4 py-1.5 text-xs font-semibold rounded-full active:opacity-80"
+          class="px-3 py-3 text-xs font-semibold rounded-full active:opacity-80"
           :style="grdRunning ? { background:'#E5E5E5', color:'#999' } : { background:'linear-gradient(135deg,#FF9800,#F57C00)', color:'#FFF' }"
           @click="!grdRunning && importGrades()">
           {{ grdRunning ? `${grdProgress.batch}/${grdProgress.totalBatches}` : '开始导入' }}
         </view>
       </view>
-      <view v-if="grdProgress.msg" class="text-xs py-2 px-3 rounded-lg" :style="{ background: grdProgress.err ? '#FFF2F2' : '#F0FFF0', color: grdProgress.err ? '#E54B4B' : '#2E7D32' }">
+      <view v-if="grdProgress.msg" class="text-xs py-3 px-3 rounded-lg" :style="{ background: grdProgress.err ? '#FFF2F2' : '#F0FFF0', color: grdProgress.err ? '#E54B4B' : '#2E7D32' }">
         {{ grdProgress.msg }}
       </view>
-      <view v-if="grdProgress.total > 0" class="mt-2">
+      <view v-if="grdProgress.total > 0" class="mt-3">
         <view class="h-2 bg-gray-100 rounded-full overflow-hidden">
           <view class="h-full rounded-full transition-all duration-300" style="background:linear-gradient(90deg,#FF9800,#F57C00)" :style="{ width: grdProgress.total ? (grdProgress.imported / grdProgress.total * 100) + '%' : '0%' }"></view>
         </view>
-        <text class="text-xs text-gray-400 mt-1 block">{{ grdProgress.imported }}/{{ grdProgress.total }}</text>
+        <text class="text-xs text-gray-400 mt-3 block">{{ grdProgress.imported }}/{{ grdProgress.total }}</text>
       </view>
     </view>
 
     <!-- Banners -->
-    <view class="mb-4 p-4 bg-white rounded-xl shadow-sm">
+    <view class="mb-3 p-3 bg-white rounded-xl shadow-sm">
       <view class="flex items-center justify-between mb-3">
-        <view class="flex items-center gap-2">
+        <view class="flex items-center gap-3">
           <view class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#E3F2FD">
             <text class="text-base">🎨</text>
           </view>
@@ -77,13 +77,13 @@
           </view>
         </view>
         <view
-          class="px-4 py-1.5 text-xs font-semibold rounded-full active:opacity-80"
+          class="px-3 py-3 text-xs font-semibold rounded-full active:opacity-80"
           :style="bnrRunning ? { background:'#E5E5E5', color:'#999' } : { background:'linear-gradient(135deg,#2196F3,#1565C0)', color:'#FFF' }"
           @click="!bnrRunning && importBanners()">
           {{ bnrRunning ? '导入中…' : '一键导入' }}
         </view>
       </view>
-      <view v-if="bnrMsg" class="text-xs py-2 px-3 rounded-lg" :style="{ background: bnrErr ? '#FFF2F2' : '#F0FFF0', color: bnrErr ? '#E54B4B' : '#2E7D32' }">
+      <view v-if="bnrMsg" class="text-xs py-3 px-3 rounded-lg" :style="{ background: bnrErr ? '#FFF2F2' : '#F0FFF0', color: bnrErr ? '#E54B4B' : '#2E7D32' }">
         {{ bnrMsg }}
       </view>
     </view>
