@@ -4,28 +4,39 @@
       <view
         v-for="item in state.dataList"
         :key="item._id"
-        class="flex items-center gap-3 p-4 rounded-xl active:scale-[0.98] transition-all duration-200"
-        style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(139, 95, 191, 0.06)"
+        class="flex items-center gap-3 p-3 rounded-xl active:scale-[0.98] transition-all duration-200"
+        style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04)"
         @click="goDetail(item)"
       >
         <!-- 封面 -->
-        <view class="relative rounded-lg overflow-hidden shrink-0" style="width: 100rpx; height: 130rpx">
-          <image :src="item.cover" mode="aspectFill" class="w-full h-full" :style="{ backgroundColor: '#D6C6E1' }" />
+        <view class="shrink-0 relative overflow-hidden rounded-lg" style="width: 100rpx; height: 130rpx">
+          <image
+            v-if="item.cover"
+            :src="item.cover"
+            mode="aspectFill"
+            class="w-full h-full"
+            :style="{ backgroundColor: th.primaryLight }"
+          />
+          <view
+            v-else
+            class="w-full h-full flex items-center justify-center"
+            :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }"
+          >
+            <text class="text-3xl font-bold text-white/80" style="font-family: Georgia, serif">{{ (item.title || '?').charAt(0) }}</text>
+          </view>
         </view>
 
         <!-- 信息 -->
         <view class="flex-1 min-w-0">
-          <text class="text-sm font-semibold line-clamp-1" style="color: #4a4a4a">{{ item.title }}</text>
-          <text class="text-xs mt-1" style="color: #878787">{{ item.publisher || '' }}</text>
-          <view class="flex items-center gap-2 mt-1.5">
+          <text class="line-clamp-1 text-sm font-semibold" style="color: #4a4a4a">{{ item.title }}</text>
+          <text class="mt-3 text-xs" style="color: #878787">{{ item.publisher || '' }}</text>
+          <view class="flex items-center gap-3 mt-3">
             <text class="text-xs" style="color: #878787">{{ formatTime(item.downloadTime) }}</text>
           </view>
         </view>
 
-        <yy-icon name="ri:arrow-right-s-line" size="18" style="color: #d6c6e1" />
+        <yy-icon name="ri:arrow-right-s-line" size="18" :color="th.primary" />
       </view>
-
-      <yy-empty v-if="!state.dataList.length && loaded" />
     </view>
   </yy-paging>
 </template>
