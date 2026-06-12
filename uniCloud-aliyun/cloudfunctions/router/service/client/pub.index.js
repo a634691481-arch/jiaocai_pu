@@ -77,7 +77,7 @@ const cloudObject = {
       });
     } catch (e) { }
 
-    return { code: 1, data: { fileUrl: info.fileUrl, title: info.title } };
+    return { code: 0, data: { fileUrl: info.fileUrl, title: info.title } };
   },
 
   /**
@@ -110,7 +110,7 @@ const cloudObject = {
         updateTime: Date.now(),
       });
     }
-    return { code: 1 };
+    return { code: 0 };
   },
 
   /**
@@ -124,9 +124,9 @@ const cloudObject = {
     let res = await db.collection('textbook_stats').where({ key }).get();
     if (res.data && res.data.length) {
       let d = res.data[0];
-      return { code: 1, data: { views: d.views || 0, downloads: d.downloads || 0 } };
+      return { code: 0, data: { views: d.views || 0, downloads: d.downloads || 0 } };
     }
-    return { code: 1, data: { views: 0, downloads: 0 } };
+    return { code: 0, data: { views: 0, downloads: 0 } };
   },
 };
 
