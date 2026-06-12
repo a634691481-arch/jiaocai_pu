@@ -38,4 +38,17 @@ module.exports = {
     // 跨多端可以 h5 开启，小程序关闭
     preflight: true,
   },
+  plugins: [
+    function ({ addUtilities, matchUtilities, theme }) {
+      addUtilities({
+        '.size-full': { width: '100%', height: '100%' },
+      })
+      matchUtilities(
+        {
+          size: value => ({ width: value, height: value }),
+        },
+        { values: theme('spacing') },
+      )
+    },
+  ],
 }
