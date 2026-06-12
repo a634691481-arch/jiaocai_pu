@@ -281,4 +281,32 @@ export default [
       infoDisabled: '#cbd5e1',
     },
   },
+
+  // 主题 11: 古铜棕（默认）
+  {
+    name: 'bronze',
+    label: '古铜棕',
+    color: {
+      primary: '#a0652c',
+      error: '#c44536',
+      warning: '#d4a373',
+      success: '#2d6a4f',
+      info: '#8c8173',
+      primaryLight: '#f5ede4',
+      errorLight: '#f8e0dc',
+      warningLight: '#f6ede4',
+      successLight: '#e0f0e8',
+      infoLight: '#f0ede8',
+      primaryDark: '#7f4f24',
+      errorDark: '#a03528',
+      warningDark: '#b88a5e',
+      successDark: '#1e4f3a',
+      infoDark: '#6b6054',
+      primaryDisabled: '#d4c0b0',
+      errorDisabled: '#e8b8b0',
+      warningDisabled: '#e8d8c8',
+      successDisabled: '#a8c8b8',
+      infoDisabled: '#c8c0b8',
+    },
+  },
 ]
