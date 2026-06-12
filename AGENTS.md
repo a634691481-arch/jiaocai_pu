@@ -57,6 +57,40 @@ The project uses **two separate API systems** — this is critical to understand
    - Error modal supports "复制错误" (copy error details to clipboard) for debugging.
    - HTTP API endpoints: `getOpenid`, `getPhoneNumber`, `getUserInfo`. These are NOT used by the login page.
 
+### VK Cloud Function Response Format
+
+All VK cloud function responses follow this convention:
+
+| `code` | 含义 | 前端行为 |
+|--------|------|----------|
+| `0` | 成功 | `vk.callFunction` 走 `success` 回调 |
+| 非 `0` | 失败 | 自动走 `fail` 回调并 `vk.alert(msg)` |
+
+**特殊返回值字段：**
+- `needUpdateUserInfo: true` + `userInfo` — 自动更新 vuex 内 `$user.userInfo` 缓存
+- `vk_uni_token: { token, tokenExpired }` — 自动更新前端 token
+
+> 来源：https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/resformat.html
+
+### VK Framework Docs
+
+官方文档：https://vkdoc.fsq.pub/client/
+
+| 模块 | 链接 |
+|------|------|
+| JS API 大全 | https://vkdoc.fsq.pub/client/jsapi.html |
+| vk.userCenter 用户中心 | https://vkdoc.fsq.pub/client/vk.userCenter.html |
+| Vuex 封装（持久化） | https://vkdoc.fsq.pub/client/pages/vuex.html |
+| 云函数路由 | https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html |
+| 数据库 API（vk.baseDao） | https://vkdoc.fsq.pub/client/uniCloud/db/api.html |
+| 万能连表（selects） | https://vkdoc.fsq.pub/client/uniCloud/db/selects.html |
+| 全局过滤器（权限） | https://vkdoc.fsq.pub/client/uniCloud/middleware/filter.html |
+| 微信服务端 API | https://vkdoc.fsq.pub/client/uniCloud/plus/weixin.html |
+| 配置（token检测/分享） | https://vkdoc.fsq.pub/client/pages/config.html |
+| vk.localStorage | https://vkdoc.fsq.pub/client/pages/localStorage.html |
+| 云函数响应体规范 | https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/resformat.html |
+| 全局错误码 | https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/error.html |
+
 ### VK Framework Conventions
 
 The VK framework (`vk-unicloud`) wraps many uni-app APIs. **Prefer VK wrappers over raw `uni.*` APIs** for consistency:
@@ -125,6 +159,7 @@ The `components/` directory contains project-specific business components (all p
 | Component              | Purpose                                            |
 | ---------------------- | -------------------------------------------------- |
 | `yy-paging`            | Paginated list wrapper (wraps z-paging)            |
+| `yy-paging` → z-paging 文档 | https://z-paging.zxlee.cn/start/intro.html        |
 | `yy-empty`             | Empty state placeholder                            |
 | `yy-loading`           | Loading spinner                                    |
 | `yy-plate-keyboard`    | Custom license plate input keyboard                |
@@ -144,15 +179,30 @@ The `components/` directory contains project-specific business components (all p
 
 **Page template pattern**: Nearly all pages use `<yy-paging v-model="state.dataList" @query="queryList">` as root wrapper, even non-list pages. The `page-content` class wraps actual content.
 
+> `yy-paging` 基于 `z-paging` 封装，常用文档链接：
+> - 介绍：https://z-paging.zxlee.cn/start/intro.html
+> - Props：https://z-paging.zxlee.cn/api/props/main.html
+> - Methods：https://z-paging.zxlee.cn/api/methods/main.html
+> - Events：https://z-paging.zxlee.cn/api/events/main.html
+> - Slots：https://z-paging.zxlee.cn/api/slot/main.html
+> - 下拉刷新：https://z-paging.zxlee.cn/module/refresher.html
+> - 底部加载更多：https://z-paging.zxlee.cn/module/load-more.html
+> - 虚拟列表：https://z-paging.zxlee.cn/module/virtual-list.html
+
+- **uView Pro 组件文档**: https://uviewpro.cn/zh/components/color.html（从 Color 色彩开始）
+
 ### Styling & Theming
 
 - **TailwindCSS** is used with CSS variables for theming (`--color-primary`, etc.). Config in `tailwind.config.js`.
-- **uView Pro theme**: `common/function/uview-pro.theme.js` defines 9 theme presets: purple, green, orange, dark, pink, blue, teal, coral, amber. Default theme is `green`.
-- Color values accessed via `uni.$u.color.primary`, `uni.$u.color.primaryLight`, etc.
+- **uView Pro theme**: `common/function/uview-pro.theme.js` defines 11 theme presets: purple, green, orange, dark, pink, blue, teal, coral, amber, violet, bronze. Default theme is `bronze` (set in `main.js:30`).
+- **颜色硬性规则**：所有页面颜色必须使用 `const th = uni.$u.color` 主题色系统，禁止硬编码色值。模板中用 `th.primary` / `th.primaryLight` 等动态绑定，`<style>` 中用 `--clr-*` CSS 变量桥接。背景/文本/边框优先用 Tailwind 主题类（`bg-theme-bg`、`text-theme-text`、`border-theme-border`）。
+- Color values accessed via `uni.$u.color.primary`, `uni.$u.color.primaryLight`, etc. Standard pattern: `const th = uni.$u.color` in `<script setup>`.
 - **Mini Program dark mode**: `theme.json` defines light/dark color schemes for navigation bar, tabbar, background.
 - `uni.scss` imports uView Pro theme SCSS and global fade transition styles.
 - `weapp-tailwindcss` is disabled for H5 and App builds (`WeappTailwindcssDisabled = isH5 || isApp`).
 - `Core.scss`: `common/css/core.scss` — check for shared utility classes.
+- **`size-*` 简写**：`tailwind.config.js` 注册了 `size-{n}` 工具类，等价于 `w-{n} h-{n}`。例如 `size-14` = `w-14 h-14`，`size-4` = `w-4 h-4`。
+- **间距规则**：所有 `p-*`、`m-*`、`gap-*` 统一使用 `3`（即 `p-3`、`m-3`、`gap-3`，对应 12px），除非有明确的设计理由使用其他值。
 
 ### Important Files
 
