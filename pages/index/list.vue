@@ -1,12 +1,5 @@
 <template>
-  <yy-paging
-    v-model="state.dataList"
-    @query="queryList"
-    ref="paging"
-    @scroll="scroll"
-    v-bind="pagingConfig"
-    :color="th.primary"
-  >
+  <yy-paging v-model="state.d" @query="queryList" ref="paging" @scroll="scroll" v-bind="pagingConfig" :color="th.primary">
     <template #top>
       <view style="background: #f5f3f7">
         <view
@@ -137,6 +130,7 @@
   const subject = ref('')
   const publisher = ref('')
   const pageTitle = ref('')
+  const d = ref([])
 
   const currentGradeFilter = ref('')
   const gradeFilters = ref(['全部年级'])
@@ -146,7 +140,10 @@
   // 从 treeData 提取当前学段+科目的可用出版社列表
   function loadPublisherOptions() {
     const secData = treeData[section.value]
-    if (!secData || !secData[subject.value]) { publisherOptions.value = []; return }
+    if (!secData || !secData[subject.value]) {
+      publisherOptions.value = []
+      return
+    }
     const pubs = Object.keys(secData[subject.value])
     publisherOptions.value = ['全部版本', ...pubs]
   }
@@ -226,7 +223,10 @@
 
   function goDetail(item) {
     let idx = textbookData.indexOf(item)
-    if (idx === -1) idx = textbookData.findIndex(r => r.title === item.title && r.publisher === item.publisher && r.grade === item.grade)
+    if (idx === -1)
+      idx = textbookData.findIndex(
+        r => r.title === item.title && r.publisher === item.publisher && r.grade === item.grade,
+      )
     vk.navigateTo(`/pages/index/detail?idx=${idx}`)
   }
 
