@@ -5,30 +5,31 @@
       <scroll-view
         ref="tabScrollRef"
         scroll-x
-        class="whitespace-nowrap tab-scroll-view gap-3 p-3"
+        class="whitespace-nowrap tab-scroll-view p-3"
         :show-scrollbar="false"
         :scroll-left="tabScrollLeft"
         scroll-with-animation
       >
-        <view class="inline-flex gap-2">
+        <view class="flex items-center gap-3">
           <view
             v-for="sec in sectionList"
             :key="sec"
             :id="'section-' + sec"
-            class="inline-block px-5 py-2 text-sm font-semibold transition-all duration-300 rounded-full"
+            class="inline-block px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-full"
             :style="
               currentSection === sec
                 ? {
-                    background: `linear-gradient(135deg, #8B5FBF, #61398F)`,
+                    background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})`,
                     color: '#FFFFFF',
-                    boxShadow: '0 4rpx 16rpx rgba(139,95,191,0.3)',
+                    boxShadow: `0 4rpx 16rpx ${th.primary}4D`,
                   }
-                : { background: '#FFFFFF', color: '#878787', boxShadow: '0 1rpx 4rpx rgba(0,0,0,0.04)' }
+                : { background: '#FFFFFF', color: th.info }
             "
             @click="onSectionClick(sec)"
           >
             {{ sec }}
           </view>
+          <view class="text-transparent">5</view>
         </view>
       </scroll-view>
     </template>
@@ -38,7 +39,7 @@
       <view
         v-for="sub in currentSubjects"
         :key="sub.name"
-        class="flex items-center gap-3.5 rounded-2xl px-4 py-3.5 active:scale-[0.98] transition-all duration-150"
+        class="flex items-center gap-3 rounded-2xl px-3 py-3 active:scale-[0.98] transition-all duration-150"
         style="background: #ffffff; box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.03)"
         @click="onSubjectClick(sub)"
       >
@@ -49,20 +50,27 @@
           <text>{{ sub.icon }}</text>
         </view>
         <view class="flex-1 min-w-0">
-          <text class="line-clamp-1 text-sm font-semibold" style="color: #4a4a4a">{{ sub.name }}</text>
-          <text class="text-xs mt-0.5" style="color: #878787">{{ sub.publisherCount }}个版本</text>
+          <text class="line-clamp-1 text-sm font-semibold" :style="{ color: th.primaryDark }">{{ sub.name }}</text>
+          <text class="mt-3 text-xs" :style="{ color: th.info }">{{ sub.publisherCount }}个版本</text>
         </view>
         <yy-icon name="ri:arrow-right-s-line" size="20" :color="th.primary" />
       </view>
     </view>
     <!-- 无数据 -->
     <view v-if="!currentSubjects.length" class="py-10 text-center">
-      <text class="text-sm" style="color: #878787">暂无科目数据</text>
+      <text class="text-sm" :style="{ color: th.info }">暂无科目数据</text>
     </view>
   </yy-paging>
 
   <!-- 出版社选择弹窗 -->
-  <yy-picker-modal v-model="showPublisherPicker" title="选择版本" :list="publisherNames" @change="onPublisherSelect" />
+  <yy-picker-modal
+    v-model="showPublisherPicker"
+    title="选择版本"
+    :list="publisherNames"
+    searchable
+    search-placeholder="搜索出版社…"
+    @change="onPublisherSelect"
+  />
 </template>
 
 <script setup>
@@ -88,7 +96,13 @@
   const showPublisherPicker = ref(false)
   const selectedSubjectName = ref('')
   const selectedPublishers = ref([])
-  const publisherNames = computed(() => selectedPublishers.value)
+  const publisherNames = computed(() =>
+    selectedPublishers.value.map(p => {
+      const short = formatPublisherShort(p)
+      const full = p.includes('-') ? p.split('-').slice(1).join('-') : ''
+      return { label: short, desc: full, icon: 'ri:building-2-line', value: p }
+    }),
+  )
 
   // ===== treeData 的顶级键即学段列表，按小学→初中→高中优先排序 =====
   const SECTION_ORDER = { 小学: 1, '小学（五•四学制）': 2, 初中: 3, '初中（五•四学制）': 4, 高中: 5 }
