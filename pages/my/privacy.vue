@@ -1,6 +1,6 @@
 <template>
   <yy-paging v-model="state.dataList" @query="queryList" ref="paging" @scroll="scroll" v-bind="pagingConfig">
-    <view class="page-wrap">
+    <view class="page-wrap" :style="`--clr-primary: ${th.primary}; --clr-primary-dark: ${th.primaryDark}; --clr-primary-light: ${th.primaryLight}; --clr-info: ${th.info}`">
       <!-- 封面头卡 -->
       <view class="hero-card">
         <view class="hero-bg">
@@ -105,7 +105,7 @@
     hideNav: false,
     showNavBack: true,
     navTitle: '隐私与协议',
-    color: '#8B5FBF',
+    color: th.primary,
   })
 
   const state = ref({ isScroll: false, dataList: [] })
@@ -272,8 +272,8 @@
   border-radius: 28rpx;
   padding: 48rpx 36rpx 40rpx;
   overflow: hidden;
-  background: linear-gradient(145deg, #8B5FBF 0%, #61398F 50%, #8B5FBF 100%);
-  box-shadow: 0 8rpx 40rpx rgba(139, 95, 191, 0.25);
+  background: linear-gradient(145deg, var(--clr-primary) 0%, var(--clr-primary-dark) 50%, var(--clr-primary) 100%);
+  box-shadow: 0 8rpx 40rpx rgba(0,0,0,0.12);
 }
 .hero-bg {
   position: absolute;
@@ -283,8 +283,8 @@
 .hero-circle {
   position: absolute;
   border-radius: 50%;
-  opacity: 0.08;
-  background: #D6C6E1;
+  background: var(--clr-primary-light);
+  opacity: 0.12;
 }
 .hero-circle-1 {
   width: 280rpx; height: 280rpx;
@@ -298,19 +298,19 @@
   width: 100rpx; height: 100rpx;
   top: 50%; right: 80rpx;
   transform: translateY(-50%);
-  background: #9A73B5;
-  opacity: 0.06;
+  background: var(--clr-primary);
+  opacity: 0.10;
 }
 .hero-icon {
   width: 80rpx;
   height: 80rpx;
   border-radius: 22rpx;
-  background: linear-gradient(135deg, #8B5FBF, #61398F);
+  background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-dark));
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 24rpx;
-  box-shadow: 0 4rpx 20rpx rgba(139, 95, 191, 0.3);
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.12);
 }
 .hero-title {
   font-size: 36rpx;
@@ -329,7 +329,7 @@
   gap: 8rpx;
   margin-top: 24rpx;
   font-size: 22rpx;
-  color: #9A73B5;
+  color: var(--clr-primary);
 }
 
 // --- TOC ---
@@ -349,12 +349,12 @@
 .toc-ornament {
   width: 60rpx;
   height: 2rpx;
-  background: linear-gradient(90deg, transparent, #D6C6E1, transparent);
+  background: linear-gradient(90deg, transparent, var(--clr-primary-light), transparent);
 }
 .toc-title {
   font-size: 26rpx;
   font-weight: 700;
-  color: #61398F;
+  color: var(--clr-primary-dark);
   letter-spacing: 8rpx;
 }
 .toc-grid {
@@ -378,7 +378,7 @@
 .toc-num {
   font-size: 20rpx;
   font-weight: 700;
-  color: #8B5FBF;
+  color: var(--clr-primary);
   font-feature-settings: 'tnum';
   width: 36rpx;
 }
@@ -410,14 +410,14 @@
 .divider-line {
   flex: 1;
   height: 1rpx;
-  background: linear-gradient(90deg, transparent, #D6C6E1, transparent);
+  background: linear-gradient(90deg, transparent, var(--clr-primary-light), transparent);
 }
 .divider-dot {
   width: 8rpx;
   height: 8rpx;
   border-radius: 50%;
-  background: #9A73B5;
-  opacity: 0.5;
+  background: var(--clr-primary);
+  opacity: 0.4;
 }
 
 // Section head
@@ -431,12 +431,12 @@
   width: 60rpx;
   height: 60rpx;
   border-radius: 14rpx;
-  background: linear-gradient(135deg, #8B5FBF, #61398F);
+  background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-dark));
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4rpx 12rpx rgba(192, 57, 43, 0.2);
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
 }
 .seal-text {
   font-size: 26rpx;
@@ -452,13 +452,13 @@
 .section-title {
   font-size: 30rpx;
   font-weight: 700;
-  color: #61398F;
+  color: var(--clr-primary-dark);
   letter-spacing: 2rpx;
 }
 .section-short {
   display: block;
   font-size: 22rpx;
-  color: #9A73B5;
+  color: var(--clr-primary);
   margin-top: 4rpx;
 }
 
@@ -487,7 +487,8 @@
   width: 10rpx;
   height: 10rpx;
   border-radius: 50%;
-  background: #9A73B5;
+  background: var(--clr-primary);
+  opacity: 0.5;
   flex-shrink: 0;
   margin-top: 10rpx;
 }
@@ -507,8 +508,8 @@
   margin-left: 80rpx;
   padding: 18rpx 20rpx;
   border-radius: 14rpx;
-  background: #F5F3F7;
-  border: 1rpx solid rgba(154, 115, 181, 0.2);
+  background: var(--clr-primary-light);
+  border: 1rpx solid rgba(0,0,0,0.06);
 }
 .tip-text {
   font-size: 23rpx;
@@ -528,7 +529,7 @@
 .footer-ornament {
   width: 160rpx;
   height: 2rpx;
-  background: linear-gradient(90deg, transparent, #D6C6E1, transparent);
+  background: linear-gradient(90deg, transparent, var(--clr-primary-light), transparent);
   margin-bottom: 12rpx;
 }
 .footer-text {
@@ -538,6 +539,6 @@
 }
 .footer-sub {
   font-size: 20rpx;
-  color: #9A73B5;
+  color: var(--clr-primary);
 }
 </style>
