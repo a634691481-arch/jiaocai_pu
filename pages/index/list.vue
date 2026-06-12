@@ -1,44 +1,43 @@
 <template>
   <yy-paging v-model="state.d" @query="queryList" ref="paging" @scroll="scroll" v-bind="pagingConfig" :color="th.primary">
     <template #top>
-      <view style="background: #f5f3f7">
-        <view
-          class="rounded-2xl flex items-center gap-3 p-4 mx-3 mt-3"
-          style="background: #ffffff; box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04)"
-        >
-          <view
-            class="rounded-xl shrink-0 flex items-center justify-center w-10 h-10"
-            :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.primaryDark})` }"
-          >
-            <yy-icon name="ri:book-2-line" size="20" color="#ffffff" />
-          </view>
-          <view class="flex-1 min-w-0">
-            <text class="line-clamp-1 text-sm font-bold" style="color: #4a4a4a">{{ subject }}</text>
-            <view class="flex items-center gap-1.5 mt-0.5" @click="showPublisherPicker = true">
-              <yy-icon name="ri:arrow-down-s-line" size="24" color="#878787" />
-              <text class="text-xs" style="color: #878787">
-                {{ publisher || '全部版本' }} · {{ state.dataList.length }}册
-              </text>
+      <view class="header-wrap">
+        <view class="header-card">
+          <view class="header-top">
+            <view class="header-icon" :style="{ background: `linear-gradient(135deg, ${th.primary}, ${th.error})` }">
+              <yy-icon name="ri:book-2-line" size="22" color="#ffffff" />
+            </view>
+            <view class="header-top-center">
+              <text class="header-subject">{{ subject }}</text>
+              <text class="header-total" :style="{ color: th.info }">共 {{ state.dataList.length }} 册</text>
+            </view>
+            <view class="header-grade-badge" :style="{ color: th.primary, background: th.primaryLight }">
+              {{ currentGradeFilter }}
             </view>
           </view>
           <view
-            class="px-3 py-1.5 rounded-full text-xs font-medium"
-            :style="{ background: 'rgba(139, 95, 191, 0.08)', color: '#8B5FBF' }"
+            class="header-publisher-btn"
+            @click="showPublisherPicker = true"
+            :style="{ borderColor: th.primaryLight, background: `${th.primaryLight}55` }"
           >
-            {{ currentGradeFilter || '全部年级' }}
+            <yy-icon name="ri:building-2-line" size="16" :color="th.primary" />
+            <text class="header-publisher-text" :style="{ color: th.primaryDark }">{{ publisher || '全部版本' }}</text>
+            <yy-icon name="ri:arrow-down-s-line" size="16" :color="th.info" />
           </view>
         </view>
-        <scroll-view scroll-x class="whitespace-nowrap" :show-scrollbar="false" style="padding: 12rpx 16rpx">
-          <view class="inline-flex gap-2">
+
+        <scroll-view
+          scroll-x
+          class="filter-scroll"
+          :show-scrollbar="false"
+          :style="`--theme-primary: ${th.primary}; --theme-info: ${th.info}`"
+        >
+          <view class="filter-track">
             <view
               v-for="g in gradeFilters"
               :key="g"
-              class="inline-block px-4 py-2 text-xs font-semibold transition-all duration-200 rounded-full"
-              :style="
-                currentGradeFilter === g
-                  ? { background: '#8B5FBF', color: '#ffffff', boxShadow: '0 4rpx 12rpx rgba(139, 95, 191, 0.25)' }
-                  : { background: '#f3f4f6', color: '#878787' }
-              "
+              class="filter-pill"
+              :class="{ 'filter-pill--active': currentGradeFilter === g }"
               @click="filterByGrade(g)"
             >
               {{ g }}
@@ -48,44 +47,35 @@
       </view>
     </template>
 
-    <view class="flex-col gap-3 p-3">
-      <!-- 教材文件列表 -->
-      <view class="flex-col gap-1.5 pb-4">
+    <view class="list-wrap">
+      <view class="card-list">
         <view
           v-for="(item, idx) in filteredList"
           :key="idx"
-          class="flex items-center gap-3.5 rounded-2xl p-3.5 active:scale-[0.98] transition-all duration-150"
-          style="background: #ffffff; box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.03)"
+          class="book-card"
+          :style="{ '--card-accent': bookColor(item.title) }"
           @click="goDetail(item)"
         >
-          <!-- PDF 图标 -->
+          <view class="book-spine" :style="{ background: `var(--card-accent)` }" />
           <view
-            class="shrink-0 w-11 h-14 relative flex flex-col items-center justify-center overflow-hidden rounded-lg"
-            style="background: linear-gradient(135deg, #ef4444, #dc2626)"
+            class="book-cover"
+            :style="{ background: `linear-gradient(135deg, var(--card-accent), ${darken(bookColor(item.title))})` }"
           >
-            <text class="text-[10px] font-black tracking-wider" style="color: #ffffff">PDF</text>
-            <view class="absolute bottom-0 left-0 right-0 h-2" style="background: #b91c1c" />
+            <text class="book-cover-text">{{ item.title.charAt(0) }}</text>
           </view>
-
-          <!-- 文件信息 -->
-          <view class="flex-1 min-w-0">
-            <text class="line-clamp-1 text-sm font-semibold" style="color: #4a4a4a">{{ item.title }}</text>
-            <view class="flex items-center gap-2 mt-1">
-              <text class="text-xs" style="color: #878787">{{ item.publisher || '' }}</text>
-              <view class="w-0.5 h-0.5 rounded-full" style="background: #d6c6e1" />
-              <text class="text-xs" style="color: #878787">{{ item.grade }}</text>
+          <view class="book-info">
+            <text class="book-title line-clamp-1">{{ item.title }}</text>
+            <view class="book-tags">
+              <view class="book-tag publisher-tag" :style="{ color: th.info, background: th.infoLight }">
+                {{ item.publisher || '—' }}
+              </view>
+              <view class="book-tag grade-tag" :style="{ color: th.primary, background: th.primaryLight }">
+                {{ item.grade }}
+              </view>
             </view>
-          </view>
-
-          <!-- 文件大小 -->
-          <view class="shrink-0 flex flex-col items-end gap-1">
-            <text class="text-xs font-medium" style="color: #878787">{{ formatSize(item.fileSize) }}</text>
-            <view class="flex items-center gap-1">
-              <view
-                class="w-7 h-7 active:scale-90 flex items-center justify-center rounded-lg"
-                :style="{ background: `rgba(139, 95, 191, 0.08)` }"
-                @click.stop="handleDownload(item)"
-              >
+            <view class="book-footer">
+              <text class="book-size">{{ formatSize(item.fileSize) }}</text>
+              <view class="book-download" :style="{ background: th.primaryLight }" @click.stop="handleDownload(item)">
                 <yy-icon name="ri:download-2-line" size="14" :color="th.primary" />
               </view>
             </view>
@@ -96,11 +86,11 @@
       <yy-empty v-if="!filteredList.length && loaded" />
     </view>
 
-    <!-- 出版社选择弹窗 -->
     <yy-picker-modal
       v-model="showPublisherPicker"
       title="选择版本"
       :list="publisherOptions"
+      :value="publisher || '全部版本'"
       @change="onPublisherSelect"
     />
   </yy-paging>
@@ -109,6 +99,8 @@
 <script setup>
   import textbookData from '@/static/textbook-data.json'
   import treeData from '@/static/textbook-tree.json'
+
+  const COLORS = ['#a0652c', '#c44536', '#2d6a4f', '#5c4d7a', '#1e6091', '#b5838d', '#7f4f24', '#936639']
 
   const th = uni.$u.color
 
@@ -132,12 +124,25 @@
   const pageTitle = ref('')
   const d = ref([])
 
-  const currentGradeFilter = ref('')
+  const currentGradeFilter = ref('全部年级')
   const gradeFilters = ref(['全部年级'])
   const showPublisherPicker = ref(false)
   const publisherOptions = ref([])
 
-  // 从 treeData 提取当前学段+科目的可用出版社列表
+  function bookColor(title) {
+    let hash = 0
+    for (let i = 0; i < title.length; i++) hash = title.charCodeAt(i) + ((hash << 5) - hash)
+    return COLORS[Math.abs(hash) % COLORS.length]
+  }
+
+  function darken(hex) {
+    const num = parseInt(hex.slice(1), 16)
+    const r = Math.max((num >> 16) - 40, 0)
+    const g = Math.max(((num >> 8) & 0xff) - 40, 0)
+    const b = Math.max((num & 0xff) - 40, 0)
+    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`
+  }
+
   function loadPublisherOptions() {
     const secData = treeData[section.value]
     if (!secData || !secData[subject.value]) {
@@ -148,7 +153,6 @@
     publisherOptions.value = ['全部版本', ...pubs]
   }
 
-  // 从 treeData 提取当前学段下当前科目+出版社的所有年级
   function loadGrades() {
     const secData = treeData[section.value]
     if (!secData) {
@@ -166,7 +170,6 @@
     gradeFilters.value = ['全部年级', ...gradesSet]
   }
 
-  // 本地过滤教材数据（学段 + 科目 ± 出版社）
   function loadLocalData() {
     const filtered = textbookData.filter(item => {
       if (item.section !== section.value) return false
@@ -180,12 +183,12 @@
   }
 
   const filteredList = computed(() => {
-    if (!currentGradeFilter.value || currentGradeFilter.value === '全部年级') return state.value.dataList
+    if (currentGradeFilter.value === '全部年级') return state.value.dataList
     return state.value.dataList.filter(i => i.grade === currentGradeFilter.value)
   })
 
   function filterByGrade(g) {
-    currentGradeFilter.value = g === '全部年级' ? '' : g
+    currentGradeFilter.value = g
   }
 
   function onPublisherSelect(pub) {
@@ -235,4 +238,241 @@
   }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .header-wrap {
+    background: #f7f5f0;
+    padding-bottom: 8rpx;
+  }
+
+  .header-card {
+    margin: 16rpx 20rpx 0;
+    padding: 20rpx 24rpx 24rpx;
+    background: #ffffff;
+    border-radius: 20rpx;
+    box-shadow: 0 2rpx 16rpx rgba(45, 35, 32, 0.04);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 16rpx;
+  }
+
+  .header-icon {
+    width: 72rpx;
+    height: 72rpx;
+    border-radius: 16rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .header-top-center {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .header-subject {
+    font-size: 32rpx;
+    font-weight: 700;
+    color: #2d2320;
+    line-height: 1.3;
+    font-family: Georgia, 'Noto Serif SC', serif;
+    display: block;
+  }
+
+  .header-total {
+    font-size: 22rpx;
+    font-weight: 400;
+    margin-top: 2rpx;
+    display: block;
+  }
+
+  .header-grade-badge {
+    padding: 8rpx 20rpx;
+    border-radius: 24rpx;
+    font-size: 24rpx;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .header-publisher-btn {
+    display: flex;
+    align-items: center;
+    gap: 8rpx;
+    margin-top: 16rpx;
+    padding: 14rpx 20rpx;
+    border-radius: 16rpx;
+    border: 2rpx solid;
+    transition: all 0.2s ease;
+  }
+
+  .header-publisher-btn:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+
+  .header-publisher-text {
+    flex: 1;
+    min-width: 0;
+    font-size: 24rpx;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .filter-scroll {
+    padding: 16rpx 20rpx 12rpx;
+    white-space: nowrap;
+  }
+
+  .filter-track {
+    display: inline-flex;
+    gap: 12rpx;
+  }
+
+  .filter-pill {
+    display: inline-block;
+    padding: 12rpx 28rpx;
+    font-size: 24rpx;
+    font-weight: 500;
+    border-radius: 40rpx;
+    transition: all 0.25s ease;
+    position: relative;
+    background: rgba(255, 255, 255, 0.7);
+    color: var(--theme-info, #8c8173);
+  }
+
+  .filter-pill--active {
+    color: #2d2320;
+    font-weight: 700;
+    background: #ffffff;
+    box-shadow: 0 2rpx 12rpx rgba(45, 35, 32, 0.06);
+  }
+
+  .filter-pill--active {
+    font-weight: 700;
+    background: #ffffff;
+    box-shadow: 0 2rpx 12rpx rgba(45, 35, 32, 0.06);
+  }
+
+  .filter-pill--active::after {
+    content: '';
+    position: absolute;
+    bottom: 4rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20rpx;
+    height: 4rpx;
+    border-radius: 2rpx;
+    background: var(--theme-primary, #a0652c);
+  }
+
+  .list-wrap {
+    padding: 8rpx 20rpx 20rpx;
+  }
+
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16rpx;
+  }
+
+  .book-card {
+    display: flex;
+    background: #ffffff;
+    border-radius: 20rpx;
+    overflow: hidden;
+    box-shadow: 0 1rpx 8rpx rgba(45, 35, 32, 0.03);
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .book-card:active {
+    transform: scale(0.985);
+    box-shadow: 0 1rpx 4rpx rgba(45, 35, 32, 0.02);
+  }
+
+  .book-spine {
+    width: 6rpx;
+    flex-shrink: 0;
+  }
+
+  .book-cover {
+    width: 100rpx;
+    height: 140rpx;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20rpx 0 20rpx 20rpx;
+    border-radius: 12rpx;
+  }
+
+  .book-cover-text {
+    font-size: 40rpx;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: Georgia, serif;
+    text-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.1);
+  }
+
+  .book-info {
+    flex: 1;
+    min-width: 0;
+    padding: 24rpx 24rpx 24rpx 16rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8rpx;
+  }
+
+  .book-title {
+    font-size: 28rpx;
+    font-weight: 700;
+    color: #2d2320;
+    line-height: 1.4;
+  }
+
+  .book-tags {
+    display: flex;
+    gap: 8rpx;
+    flex-wrap: wrap;
+  }
+
+  .book-tag {
+    padding: 4rpx 14rpx;
+    border-radius: 16rpx;
+    font-size: 20rpx;
+    font-weight: 500;
+  }
+
+  .book-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4rpx;
+  }
+
+  .book-size {
+    font-size: 22rpx;
+    color: #b8aea4;
+    font-weight: 400;
+  }
+
+  .book-download {
+    width: 52rpx;
+    height: 52rpx;
+    border-radius: 14rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+
+  .book-download:active {
+    transform: scale(0.88);
+  }
+</style>
