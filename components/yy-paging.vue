@@ -148,7 +148,7 @@
     // 加载更多无更多提示文字，默认 '没有更多了'
     loadingMoreNoMoreText: {
       type: String,
-      default: '没有更多了',
+      default: '',
     },
 
     // 是否关闭首次自动下拉刷新，默认 false（即默认开启）
